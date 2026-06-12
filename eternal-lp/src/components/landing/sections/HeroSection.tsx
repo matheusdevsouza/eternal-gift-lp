@@ -107,6 +107,11 @@ export default function HeroSection() {
   const midRef = useRef<HTMLDivElement>(null);
   const frontRef = useRef<HTMLDivElement>(null);
 
+  const quote =
+    "Flores morrem em dias. Perfumes evaporam. Roupas perdem a graça. Mas a memória de como você fez alguém se sentir... essa fica gravada para sempre. No final das contas, o que realmente importa não cabe em caixas ou embrulhos. Está na hora de parar de dar presentes sem alma e começar a eternizar o amor de verdade.";
+
+  const wordsList = quote.split(" ");
+
   useGSAP(
     () => {
       if (!sectionRef.current) return;
@@ -115,20 +120,105 @@ export default function HeroSection() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "bottom top",
-          scrub: true,
+          end: "+=3000", // Pinned scroll distance extended for seamless text transition
+          pin: true,
+          scrub: 1, // Smooth scrolling lag
           invalidateOnRefresh: true,
         },
       });
 
-      // Background moves down slowly (parallax factor)
-      tl.to(bgRef.current, { y: 150, ease: "none" }, 0);
+      // 1. Content fades out and slides up
+      tl.to(".hero-content-to-fade", {
+        opacity: 0,
+        y: -100,
+        scale: 0.95,
+        ease: "power2.inOut",
+        duration: 0.4
+      }, 0);
 
-      // Middle clouds move down at medium pace
-      tl.to(midRef.current, { y: 80, ease: "none" }, 0);
+      // 1b. Floating assets fade out
+      tl.to(".hero-floating-asset", {
+        opacity: 0,
+        y: -50,
+        ease: "power2.inOut",
+        duration: 0.4
+      }, 0);
 
-      // Front clouds rise up faster to cover text nicely
-      tl.to(frontRef.current, { y: -100, ease: "none" }, 0);
+      // 2. Sky background scales up and fades
+      tl.to(bgRef.current, {
+        scale: 1.3,
+        y: -100,
+        opacity: 0,
+        ease: "power1.inOut",
+        duration: 0.8
+      }, 0);
+
+      // 3. Middle clouds scale and rise completely out of the screen
+      tl.to(midRef.current, {
+        scale: 2.2,
+        y: "-120%",
+        opacity: 0,
+        ease: "power1.inOut",
+        duration: 1.0
+      }, 0);
+
+      // 4. Front clouds scale massively and rise completely out of the screen
+      tl.to(frontRef.current, {
+        scale: 4.5,
+        y: "-150%",
+        opacity: 0,
+        ease: "power2.inOut",
+        duration: 1.0
+      }, 0);
+
+      // 5. Pink fog rolls in to cover everything except the phone (which sits on z-10)
+      tl.to(".hero-transition-overlay", {
+        opacity: 1,
+        ease: "power2.inOut",
+        duration: 0.4
+      }, 0.4);
+
+      // 6. Cloud image within transition overlay fades in (very subtle, low opacity) together with the fog
+      tl.to(".hero-transition-cloud-img", {
+        opacity: 0.08,
+        ease: "power2.inOut",
+        duration: 0.4
+      }, 0.4);
+
+      // 7. Fade in the problem overlay/container
+      tl.to(".problem-overlay", {
+        opacity: 1,
+        pointerEvents: "auto",
+        duration: 0.2
+      }, 1.0);
+
+      // 8. Word-by-word reveal of the text (coming up from below with clip-path mask)
+      tl.fromTo(".problem-word",
+        { y: "110%", opacity: 0 },
+        {
+          y: "0%",
+          opacity: 1,
+          stagger: 0.018, // 60 words * 0.018s = 1.08s total stagger
+          ease: "power1.out",
+          duration: 0.3
+        },
+        1.1
+      );
+
+      // 9. Fade in the problem floating assets
+      tl.fromTo(".problem-floating-asset",
+        { opacity: 0, scale: 0.8 },
+        { opacity: 0.35, scale: 1, duration: 0.4 },
+        1.2
+      );
+
+      // 10. Fade out and slide up the problem overlay to transition to ComoFuncionaSection
+      tl.to(".problem-overlay", {
+        opacity: 0,
+        y: -80,
+        ease: "power2.in",
+        duration: 0.3
+      }, 2.6);
 
       // Organic, slow drifting loops for clouds (using separate inner elements to avoid conflicts)
       gsap.to(".float-mid-clouds", {
@@ -148,14 +238,39 @@ export default function HeroSection() {
         yoyo: true,
         repeat: -1,
       });
+
+      // Organic, continuous floating animations for problem background assets
+      gsap.to(".float-left-asset", {
+        y: "-=30",
+        x: "+=15",
+        rotation: 6,
+        duration: 7,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+
+      gsap.to(".float-right-asset", {
+        y: "+=25",
+        x: "-=20",
+        rotation: -8,
+        duration: 8,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
     },
     { scope: sectionRef }
   );
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center px-4 sm:px-6 overflow-hidden pt-24 pb-12 bg-transparent z-[2]"
+      className="relative min-h-screen flex items-center px-4 sm:px-6 overflow-hidden pt-24 pb-12 z-[2]"
+      style={{
+        backgroundColor: "#D28F9A",
+      }}
     >
       {/* Background Glow */}
       <div
@@ -163,47 +278,76 @@ export default function HeroSection() {
         style={{ background: "linear-gradient(to bottom, rgba(255, 51, 102, 0.15), transparent)" }}
       />
 
-      {/* Parallax Background Layers */}
+      {/* Parallax Background Layers Wrapper with CSS Mask to fade to transparent at the bottom */}
       <div
-        ref={bgRef}
-        className="absolute top-[-10%] left-0 w-full h-[130%] pointer-events-none select-none z-[1]"
+        className="absolute inset-0 pointer-events-none select-none z-[1]"
+        style={{
+          maskImage: "linear-gradient(to top, transparent 0px, rgba(0,0,0,1) 450px)",
+          WebkitMaskImage: "linear-gradient(to top, transparent 0px, rgba(0,0,0,1) 450px)",
+        }}
       >
-        <img
-          src="/background/01_fundo_distante.png"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-      </div>
+        {/* Parallax Background Layers */}
+        <div
+          ref={bgRef}
+          className="absolute top-[-10%] left-0 w-full h-[130%] pointer-events-none select-none z-[1]"
+        >
+          <img
+            src="/background/01_fundo_distante.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-      <div
-        ref={midRef}
-        className="absolute bottom-[-100px] left-0 w-full h-[85%] pointer-events-none select-none z-[2] overflow-hidden"
-      >
-        <img
-          src="/background/02_nuvens_meio.png"
-          alt=""
-          className="w-full h-full object-cover float-mid-clouds scale-[1.15] origin-center"
+        {/* Immersive Cloud Interior Transition Overlay (Pink Fog behind clouds) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none z-[2] hero-transition-overlay"
+          style={{
+            backgroundColor: "#D28D96",
+            opacity: 0,
+          }}
         />
-      </div>
 
-      <div
-        ref={frontRef}
-        className="absolute bottom-[-150px] left-0 w-full h-[65%] pointer-events-none select-none z-[4] overflow-hidden"
-      >
-        <img
-          src="/background/03_nuvens_frente.png"
-          alt=""
-          className="w-full h-full object-cover float-front-clouds scale-[1.15] origin-center"
-        />
-      </div>
+        {/* Cloud Interior Transition Image (behind front/mid clouds) */}
+        <div
+          className="absolute inset-0 pointer-events-none select-none z-[3] hero-transition-cloud-img"
+          style={{
+            opacity: 0,
+          }}
+        >
+          <img
+            src="/background/nuvens/dentro-nuvens.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-      {/* Bottom Transition Gradient Mask */}
-      <div className="absolute bottom-0 left-0 w-full h-[250px] bg-gradient-to-t from-[#0F0507] via-[#0F0507]/80 to-transparent z-[4] pointer-events-none" />
+        <div
+          ref={midRef}
+          className="absolute bottom-[-100px] left-0 w-full h-full pointer-events-none select-none z-[4]"
+        >
+          <img
+            src="/background/02_nuvens_meio.png"
+            alt=""
+            className="w-full h-full object-cover float-mid-clouds scale-[1.15] origin-center"
+          />
+        </div>
+
+        <div
+          ref={frontRef}
+          className="absolute bottom-[-150px] left-0 w-full h-full pointer-events-none select-none z-[5]"
+        >
+          <img
+            src="/background/03_nuvens_frente.png"
+            alt=""
+            className="w-full h-full object-cover float-front-clouds scale-[1.15] origin-center"
+          />
+        </div>
+      </div>
 
       {/* Floating Background Effects - Organic & Refined (Top layer z-5) */}
       <FloatingElement
         src="/background/gift.webp"
-        className="absolute -left-10 md:-left-5 lg:left-4 top-[15%] pointer-events-none select-none hidden xl:block z-[5]"
+        className="hero-floating-asset absolute -left-10 md:-left-5 lg:left-4 top-[15%] pointer-events-none select-none hidden xl:block z-[5]"
         delay={0}
         duration={18}
         opacity={0.5}
@@ -213,7 +357,7 @@ export default function HeroSection() {
 
       <FloatingElement
         src="/background/balloon.webp"
-        className="absolute -right-10 md:-right-5 lg:right-4 top-[10%] pointer-events-none select-none hidden 2xl:block z-[5]"
+        className="hero-floating-asset absolute -right-10 md:-right-5 lg:right-4 top-[10%] pointer-events-none select-none hidden 2xl:block z-[5]"
         delay={2}
         duration={22}
         opacity={0.35}
@@ -225,7 +369,7 @@ export default function HeroSection() {
 
       <FloatingElement
         src="/background/gift.webp"
-        className="absolute right-[5%] bottom-[15%] pointer-events-none select-none hidden xl:block z-[5]"
+        className="hero-floating-asset absolute right-[5%] bottom-[15%] pointer-events-none select-none hidden xl:block z-[5]"
         delay={4}
         duration={20}
         opacity={0.4}
@@ -237,7 +381,7 @@ export default function HeroSection() {
 
       <FloatingElement
         src="/background/balloon.webp"
-        className="absolute left-[5%] bottom-[5%] pointer-events-none select-none hidden 2xl:block z-[5]"
+        className="hero-floating-asset absolute left-[5%] bottom-[5%] pointer-events-none select-none hidden 2xl:block z-[5]"
         delay={6}
         duration={25}
         opacity={0.3}
@@ -248,7 +392,7 @@ export default function HeroSection() {
       />
 
       {/* Main Content Container */}
-      <div className="max-w-7xl mx-auto w-full relative z-[5]">
+      <div className="max-w-7xl mx-auto w-full relative z-[5] hero-content-to-fade">
         <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-8 lg:gap-16 items-center min-h-[80vh]">
           {/* Column 1: Text Content */}
           <motion.div
@@ -264,7 +408,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] font-black mb-6 lg:mb-8 leading-[1.05] tracking-tighter text-[#FFF8F9] max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto lg:mx-0 xl:-mr-10 relative z-20"
+                className="text-5xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] font-black mb-6 lg:mb-8 leading-[1.05] tracking-tighter text-text-primary max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto lg:mx-0 xl:-mr-10 relative z-20"
               >
                 Eternize histórias
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] via-[#FDA4AF] to-[#FF3366] bg-[length:200%_auto] animate-gradient block">
@@ -277,7 +421,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-                className="text-lg sm:text-xl text-[#FFF8F9]/75 mx-auto lg:mx-0 font-light leading-relaxed mb-10 max-w-2xl"
+                className="text-lg sm:text-xl text-text-secondary mx-auto lg:mx-0 font-light leading-relaxed mb-10 max-w-2xl"
               >
                 Esqueça os presentes comuns. Crie uma página interativa com fotos,
                 vídeos, textos e uma trilha sonora marcante. Em menos de 5 minutos,
@@ -303,7 +447,7 @@ export default function HeroSection() {
                 </a>
                 <a
                   href="#features"
-                  className="w-full sm:w-auto px-10 py-5 bg-[#1A0B0E] border border-[#2D1318] hover:bg-[#2D1318] hover:border-[#FF3366] text-[#FFF8F9] font-black rounded-xl transition-all text-center min-w-[200px] flex items-center justify-center gap-3 group"
+                  className="w-full sm:w-auto px-10 py-5 bg-bg-card border border-border hover:bg-bg-card-hover hover:border-primary text-text-primary font-black rounded-xl transition-all text-center min-w-[200px] flex items-center justify-center gap-3 group"
                 >
                   Ver exemplo real
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -318,6 +462,66 @@ export default function HeroSection() {
             style={{ minHeight: "600px" }}
           >
             <div className="glow-bg w-[300px] h-[300px] opacity-15" />
+          </div>
+        </div>
+      </div>
+
+      {/* Problem Section content integrated directly for a seamless transition */}
+      <div
+        className="problem-overlay absolute inset-0 z-[6] pointer-events-none flex items-center justify-center opacity-0"
+        style={{ backgroundColor: "transparent" }}
+      >
+        {/* Background Pattern (Dark Grid) */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none select-none"
+          style={{ opacity: 0.06, mixBlendMode: "multiply" }}
+        >
+          <img
+            src="/background/pattern.webp"
+            alt=""
+            className="w-full h-full object-cover"
+            style={{ filter: "invert(1)" }}
+          />
+        </div>
+
+        {/* Floating Background Assets */}
+        <div className="problem-floating-asset absolute left-6 lg:left-16 top-[20%] w-24 md:w-36 lg:w-48 select-none pointer-events-none z-10 hidden md:block">
+          <img
+            src="/background/heart-balloon.webp"
+            alt=""
+            className="w-full h-auto object-contain float-left-asset"
+          />
+        </div>
+
+        <div className="problem-floating-asset absolute right-6 lg:right-16 bottom-[20%] w-20 md:w-28 lg:w-36 select-none pointer-events-none z-10 hidden md:block">
+          <img
+            src="/background/song.webp"
+            alt=""
+            className="w-full h-auto object-contain float-right-asset"
+          />
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6 relative z-20 text-center">
+          {/* Editorial Text */}
+          <div
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-[1.3] text-center max-w-4xl mx-auto flex flex-wrap justify-center gap-x-[12px] gap-y-[6px]"
+          >
+            {wordsList.map((word, idx) => {
+              const isGradient = idx >= wordsList.length - 5;
+              return (
+                <span key={idx} className="inline-block overflow-hidden py-1">
+                  <span
+                    className={`problem-word inline-block transition-all duration-300 ${
+                      isGradient
+                        ? "text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8F9] to-[#FDA4AF] font-black"
+                        : ""
+                    }`}
+                  >
+                    {word}
+                  </span>
+                </span>
+              );
+            })}
           </div>
         </div>
       </div>

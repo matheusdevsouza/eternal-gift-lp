@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // @ts-ignore
 import Lenis from "lenis";
 import gsap from "gsap";
@@ -12,17 +12,18 @@ import EternalFooter from "./EternalFooter";
 import PhoneCanvas from "./three/PhoneCanvas";
 
 import HeroSection from "./sections/HeroSection";
-import ProblemSection from "./sections/ProblemSection";
 import ComoFuncionaSection from "./sections/ComoFuncionaSection";
 import FeaturesSection from "./sections/FeaturesSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
 import PricingSection from "./sections/PricingSection";
 import FAQSection from "./sections/FAQSection";
 import FinalCTASection from "./sections/FinalCTASection";
+import LoadingScreen from "./LoadingScreen";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function EternalLanding() {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     // 1. Initialize Lenis Smooth Scroll
     const lenis = new Lenis({
@@ -60,7 +61,7 @@ export default function EternalLanding() {
   }, []);
 
   return (
-    <div id="landing-wrapper" className="relative w-full min-h-screen bg-[#0F0507]">
+    <div id="landing-wrapper" className="relative w-full min-h-screen bg-bg-deep">
       {/* 0. Subtle Background Pattern */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <Image
@@ -69,7 +70,7 @@ export default function EternalLanding() {
           fill
           aria-hidden="true"
           className="object-cover"
-          style={{ opacity: 0.03 }}
+          style={{ opacity: 0.04 }}
           priority
         />
       </div>
@@ -83,7 +84,6 @@ export default function EternalLanding() {
       {/* 3. Sections Path */}
       <div className="relative z-20">
         <HeroSection />
-        <ProblemSection />
         <ComoFuncionaSection />
         <FeaturesSection />
         <TestimonialsSection />
@@ -94,6 +94,9 @@ export default function EternalLanding() {
 
       {/* 4. Global Footer */}
       <EternalFooter />
+
+      {/* Premium Loading Screen */}
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
     </div>
   );
 }

@@ -49,17 +49,34 @@ export default function ComoFuncionaSection() {
     <section
       id="como-funciona"
       ref={containerRef}
-      className="relative py-24 bg-transparent border-b border-[#2D1318]/50 overflow-hidden"
+      className="relative py-24 overflow-hidden"
     >
-      <div className="glow-bg w-[500px] h-[500px] top-10 right-10 opacity-5" />
+      {/* Background Image of cloud transition */}
+      <div className="absolute inset-0 z-[1] pointer-events-none select-none">
+        <img
+          src="/background/nuvens/transicao-nuvens.png"
+          alt=""
+          className="w-full h-full object-cover object-top opacity-100"
+        />
+      </div>
+
+      {/* Gradient transition at the top (to blend with HeroSection) */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[180px] pointer-events-none z-[2]"
+        style={{
+          background: "linear-gradient(to bottom, #D28D96, transparent)"
+        }}
+      />
+
+      <div className="glow-bg w-[500px] h-[500px] top-10 right-10 opacity-5 z-10" />
 
       <div className="max-w-7xl mx-auto px-6 w-full relative z-20">
         {/* Section Heading (Eyebrow tag removed) */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FFF8F9] tracking-tight leading-tight">
-            Como funciona a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#FDA4AF]">experiência.</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">
+            Como funciona a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">experiência.</span>
           </h2>
-          <p className="mt-4 text-[#FFF8F9]/60 text-base md:text-lg">
+          <p className="mt-4 text-text-secondary text-base md:text-lg">
             Em menos de 5 minutos você cria uma homenagem marcante que ficará guardada na memória para sempre.
           </p>
         </div>
@@ -73,11 +90,11 @@ export default function ComoFuncionaSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, delay: idx * 0.12, ease: "easeOut" }}
-              className="step-card group relative p-8 rounded-2xl bg-[#1A0B0E]/60 border border-[#2D1318] hover:border-[#FF3366]/30 hover:bg-[#2D1318]/40 shadow-xl transition-all duration-300 flex flex-col items-center text-center"
+              className="step-card group relative p-8 rounded-2xl bg-bg-card border border-border hover:border-primary/30 hover:bg-bg-card-hover shadow-xl shadow-[#FF3366]/[0.02] transition-all duration-300 flex flex-col items-center text-center"
               whileHover={{ y: -6 }}
             >
               {/* Step number badge */}
-              <span className="absolute top-6 left-6 font-mono font-black text-2xl text-[#FF3366]/20 group-hover:text-[#FF3366]/40 transition-colors">
+              <span className="absolute top-6 left-6 font-mono font-black text-2xl text-primary/20 group-hover:text-primary/40 transition-colors">
                 {step.number}
               </span>
 
@@ -94,10 +111,10 @@ export default function ComoFuncionaSection() {
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-bold mb-3 text-[#FFF8F9] group-hover:text-[#FF3366] transition-colors tracking-tight">
+              <h3 className="text-xl font-bold mb-3 text-text-primary group-hover:text-primary transition-colors tracking-tight">
                 {step.title}
               </h3>
-              <p className="text-sm text-[#FFF8F9]/70 leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed">
                 {step.description}
               </p>
             </motion.div>

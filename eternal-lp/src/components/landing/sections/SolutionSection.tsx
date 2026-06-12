@@ -46,7 +46,7 @@ export default function SolutionSection() {
     <section
       id="solucao"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center py-32 bg-[#0F0507]"
+      className="relative min-h-screen flex items-center justify-center py-32 bg-bg-deep"
     >
       <div className="glow-bg w-[500px] h-[500px] top-1/4 right-0 opacity-5" />
 
@@ -60,13 +60,13 @@ export default function SolutionSection() {
         <div className="lg:col-span-7 flex flex-col gap-16 text-left lg:pl-8">
           {/* Layer 1 */}
           <div className="solution-layer flex flex-col items-start">
-            <span className="text-xs font-bold tracking-widest text-[#FF3366] uppercase mb-4">
+            <span className="text-xs font-bold tracking-widest text-primary uppercase mb-4">
               A Nova Forma de Presentear
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[#FFF8F9] tracking-tight leading-tight mb-4">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-text-primary tracking-tight leading-tight mb-4">
               Um santuário digital para os seus melhores momentos.
             </h2>
-            <p className="text-[#FFF8F9]/70 text-base md:text-lg leading-relaxed max-w-xl">
+            <p className="text-text-secondary text-base md:text-lg leading-relaxed max-w-xl">
               Eternal Gift é uma plataforma premium que transforma memórias
               espalhadas em uma página de homenagem impecável e personalizada.
               Uma obra de arte digital dedicada à pessoa que você ama.
@@ -75,13 +75,13 @@ export default function SolutionSection() {
 
           {/* Layer 2 */}
           <div className="solution-layer flex flex-col items-start">
-            <span className="text-xs font-bold tracking-widest text-[#FDA4AF] uppercase mb-4">
+            <span className="text-xs font-bold tracking-widest text-primary uppercase mb-4">
               Conexão Imediata
             </span>
-            <h3 className="text-2xl md:text-3xl font-extrabold text-[#FFF8F9] tracking-tight leading-tight mb-4">
+            <h3 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight leading-tight mb-4">
               Pronto em menos de 5 minutos, guardado para sempre.
             </h3>
-            <p className="text-[#FFF8F9]/70 text-base md:text-lg leading-relaxed max-w-xl">
+            <p className="text-text-secondary text-base md:text-lg leading-relaxed max-w-xl">
               Sem necessidade de habilidades técnicas. Envie suas fotos, grave
               uma mensagem sincera, escolha as músicas que marcaram sua jornada e
               crie um elo eterno acessível por um link ou QR Code exclusivo.
@@ -90,13 +90,13 @@ export default function SolutionSection() {
 
           {/* Layer 3 */}
           <div className="solution-layer flex flex-col items-start">
-            <span className="text-xs font-bold tracking-widest text-[#FF3366] uppercase mb-4">
+            <span className="text-xs font-bold tracking-widest text-primary uppercase mb-4">
               Impacto Emocional
             </span>
-            <h3 className="text-2xl md:text-3xl font-extrabold text-[#FFF8F9] tracking-tight leading-tight mb-4">
+            <h3 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight leading-tight mb-4">
               Gere lágrimas sinceras de felicidade.
             </h3>
-            <p className="text-[#FFF8F9]/70 text-base md:text-lg leading-relaxed max-w-xl">
+            <p className="text-text-secondary text-base md:text-lg leading-relaxed max-w-xl">
               Nossos usuários relatam que a surpresa entrega mais do que uma
               homenagem: é um abraço em forma de página, revivendo risadas,
               viagens e momentos inesquecíveis.

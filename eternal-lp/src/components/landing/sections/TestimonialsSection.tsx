@@ -14,22 +14,22 @@ interface Testimonial {
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <div
-      className="w-[280px] sm:w-[320px] bg-[#FFF8F9] text-[#0F0507] p-5 pb-8 rounded-sm shadow-2xl flex flex-col justify-between transform rotate-[-1deg] odd:rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 select-none"
+      className="w-[280px] sm:w-[320px] bg-white text-text-primary p-5 pb-8 rounded-sm shadow-xl flex flex-col justify-between transform rotate-[-1deg] odd:rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 select-none border border-border"
       style={{ flexShrink: 0 }}
     >
       {/* Polaroid Photo Area */}
-      <div className="w-full aspect-square bg-[#0F0507] rounded-sm mb-5 relative overflow-hidden flex flex-col items-center justify-center p-4">
+      <div className="w-full aspect-square bg-bg-deep rounded-sm mb-5 relative overflow-hidden flex flex-col items-center justify-center p-4 border border-border">
         {/* Couple profile mock */}
-        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#FF3366] to-[#FDA4AF] flex items-center justify-center text-white font-extrabold text-xl mb-3 shadow-lg">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#FF3366] to-[#E91E63] flex items-center justify-center text-white font-extrabold text-xl mb-3 shadow-md">
           {t.name
             .split("&")
             .map((n) => n.trim()[0])
             .join("")}
         </div>
-        <span className="text-[10px] font-bold tracking-widest text-[#FDA4AF] uppercase mb-1">
+        <span className="text-[10px] font-bold tracking-widest text-[#FF3366] uppercase mb-1">
           {t.relation}
         </span>
-        <span className="text-[9px] text-[#FFF8F9]/50 font-mono">
+        <span className="text-[9px] text-text-muted font-mono">
           {t.date}
         </span>
 
@@ -42,13 +42,13 @@ function TestimonialCard({ t }: { t: Testimonial }) {
       </div>
 
       {/* Testimonial text */}
-      <p className="text-sm text-[#0F0507]/90 leading-relaxed font-medium italic mb-6">
+      <p className="text-sm text-text-secondary leading-relaxed font-medium italic mb-6">
         &ldquo;{t.story}&rdquo;
       </p>
 
       {/* Polaroid Handwriting Footer */}
-      <div className="border-t border-[#0F0507]/10 pt-4 flex justify-between items-center">
-        <span className="font-serif italic text-lg font-bold text-gray-800 tracking-tight">
+      <div className="border-t border-border pt-4 flex justify-between items-center">
+        <span className="font-serif italic text-lg font-bold text-text-primary tracking-tight">
           {t.name}
         </span>
         <div className="flex text-[#FF3366]">
@@ -149,14 +149,14 @@ export default function TestimonialsSection() {
     <section
       ref={sectionRef}
       id="depoimentos"
-      className="relative overflow-hidden py-24 border-y border-[#2D1318]/50 flex flex-col gap-12"
+      className="relative overflow-hidden py-24 border-y border-border flex flex-col gap-12"
     >
       {/* Centered Heading */}
       <div className="text-center max-w-3xl mx-auto px-6 z-20">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FFF8F9] tracking-tight leading-tight">
-          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#FDA4AF]">conexões</span> eternizadas.
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">
+          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">conexões</span> eternizadas.
         </h2>
-        <p className="mt-4 text-[#FFF8F9]/60 text-base md:text-lg">
+        <p className="mt-4 text-text-secondary text-base md:text-lg">
           Veja o que dizem as pessoas que já receberam e enviaram homenagens através da Eternal Gift.
         </p>
       </div>

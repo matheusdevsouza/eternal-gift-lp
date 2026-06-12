@@ -8,19 +8,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "bg-deep": "#0F0507",
-        "bg-card": "#1A0B0E",
-        "bg-card-hover": "#2D1318",
-        "bg-section": "#1A0B0E",
+        "bg-deep": "#FFF8F9",
+        "bg-card": "#FFFFFF",
+        "bg-card-hover": "#FFF0F2",
+        "bg-section": "#FFF0F2",
         primary: "#FF3366",
         "primary-hover": "#FF4D7D",
         "primary-dark": "#E91E63",
         accent: "#FDA4AF",
-        "text-primary": "#FFF8F9",
-        "text-secondary": "rgba(255, 248, 249, 0.6)",
-        "text-muted": "rgba(255, 248, 249, 0.45)",
-        border: "#2D1318",
-        "border-hover": "rgba(255, 51, 102, 0.3)",
+        "text-primary": "#2D1318",
+        "text-secondary": "rgba(45, 19, 24, 0.68)",
+        "text-muted": "rgba(45, 19, 24, 0.45)",
+        border: "#F2DCDD",
+        "border-hover": "rgba(255, 51, 102, 0.2)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],

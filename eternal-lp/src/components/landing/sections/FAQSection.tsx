@@ -43,17 +43,17 @@ export default function FAQSection() {
   return (
     <section
       id="faq"
-      className="relative py-24 bg-transparent border-t border-[#2D1318]/50"
+      className="relative py-24 bg-transparent border-t border-border/50"
     >
       <div className="glow-bg w-[400px] h-[400px] bottom-0 right-0 opacity-5" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-20">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FFF8F9] tracking-tight">
-            Perguntas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#FDA4AF]">Comuns</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight">
+            Perguntas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">Comuns</span>
           </h2>
-          <p className="mt-4 text-[#FFF8F9]/60 text-base md:text-lg">
+          <p className="mt-4 text-text-secondary text-base md:text-lg">
             Tudo o que você precisa saber para criar uma surpresa inesquecível.
           </p>
         </div>
@@ -65,15 +65,15 @@ export default function FAQSection() {
             return (
               <div
                 key={idx}
-                className="border-b border-[#2D1318] pb-4 last:border-b-0"
+                className="border-b border-border pb-4 last:border-b-0"
               >
                 <button
                   onClick={() => setActiveIndex(isOpen ? null : idx)}
-                  className="w-full flex items-center justify-between py-4 text-left font-bold text-lg text-[#FFF8F9] hover:text-[#FF3366] transition-colors focus:outline-none cursor-pointer"
+                  className="w-full flex items-center justify-between py-4 text-left font-bold text-lg text-text-primary hover:text-primary transition-colors focus:outline-none cursor-pointer"
                 >
                   <span>{faq.question}</span>
                   <Plus
-                    className={`text-[#FF3366] w-6 h-6 transform transition-transform duration-300 ${
+                    className={`text-primary w-6 h-6 transform transition-transform duration-300 ${
                       isOpen ? "rotate-45" : "rotate-0"
                     }`}
                   />
@@ -86,7 +86,7 @@ export default function FAQSection() {
                       : "max-h-0 opacity-0 pointer-events-none"
                   }`}
                 >
-                  <div className="py-2 text-base text-[#FFF8F9]/70 leading-relaxed max-w-2xl">
+                  <div className="py-2 text-base text-text-secondary leading-relaxed max-w-2xl">
                     {faq.answer}
                   </div>
                 </div>
@@ -97,7 +97,7 @@ export default function FAQSection() {
 
         {/* Contact Container underneath, same width as FAQ */}
         <div className="max-w-3xl mx-auto mt-16">
-          <div className="p-6 md:p-8 rounded-2xl border border-[#2D1318] hover:border-[#FF3366]/40 bg-[#1A0B0E]/60 flex flex-col sm:flex-row items-center gap-6 relative group overflow-hidden transition-all duration-300">
+          <div className="p-6 md:p-8 rounded-2xl border border-border hover:border-primary/40 bg-bg-card flex flex-col sm:flex-row items-center gap-6 relative group overflow-hidden transition-all duration-300 shadow-xl shadow-[#FF3366]/[0.02]">
             <div className="glow-bg w-48 h-48 opacity-10 group-hover:opacity-15 transition-opacity duration-500" />
             
             <div className="relative w-28 h-28 flex-shrink-0">
@@ -110,10 +110,10 @@ export default function FAQSection() {
             </div>
             
             <div className="flex-1 text-center sm:text-left z-10">
-              <h3 className="text-xl font-bold text-[#FFF8F9] mb-2">
+              <h3 className="text-xl font-bold text-text-primary mb-2">
                 Ainda está com alguma dúvida?
               </h3>
-              <p className="text-sm text-[#FFF8F9]/60 leading-relaxed mb-4">
+              <p className="text-sm text-text-secondary leading-relaxed mb-4">
                 Nossa equipe de suporte está de prontidão para ajudar você a criar a melhor homenagem.
               </p>
               <a

@@ -41,7 +41,7 @@ export default function EternalFooter() {
   ];
 
   return (
-    <footer className="relative z-20 bg-[#0F0507] border-t border-[#2D1318] transition-colors duration-300">
+    <footer className="relative z-20 bg-bg-deep border-t border-border transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
@@ -51,10 +51,10 @@ export default function EternalFooter() {
                 alt="Eternal Gift"
                 width={140}
                 height={46}
-                className="h-12 w-auto opacity-90"
+                className="h-12 w-auto opacity-90 invert"
               />
             </Link>
-            <p className="text-[#FFF8F9]/60 text-sm leading-relaxed mb-6 max-w-xs">
+            <p className="text-text-secondary text-sm leading-relaxed mb-6 max-w-xs">
               Crie memórias digitais eternas para quem você ama.
             </p>
             <div className="flex items-center gap-4">
@@ -64,7 +64,7 @@ export default function EternalFooter() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-[#1A0B0E] border border-[#2D1318] flex items-center justify-center text-[#FFF8F9]/60 hover:text-[#FF3366] hover:border-[#FF3366]/50 transition-all"
+                  className="w-10 h-10 rounded-lg bg-bg-card border border-border flex items-center justify-center text-text-secondary hover:text-primary hover:border-primary/50 transition-all"
                   aria-label={social.name}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -90,13 +90,13 @@ export default function EternalFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold text-[#FFF8F9] mb-4 uppercase tracking-wider">Produto</h3>
+            <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider">Produto</h3>
             <ul className="space-y-3">
               {footerLinks.produto.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#FFF8F9]/60 hover:text-[#FF3366] transition-colors"
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -106,13 +106,13 @@ export default function EternalFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold text-[#FFF8F9] mb-4 uppercase tracking-wider">Empresa</h3>
+            <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider">Empresa</h3>
             <ul className="space-y-3">
               {footerLinks.empresa.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#FFF8F9]/60 hover:text-[#FF3366] transition-colors"
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -122,13 +122,13 @@ export default function EternalFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold text-[#FFF8F9] mb-4 uppercase tracking-wider">Recursos</h3>
+            <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider">Recursos</h3>
             <ul className="space-y-3">
               {footerLinks.recursos.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#FFF8F9]/60 hover:text-[#FF3366] transition-colors"
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -138,13 +138,13 @@ export default function EternalFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-bold text-[#FFF8F9] mb-4 uppercase tracking-wider">Legal</h3>
+            <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider">Legal</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#FFF8F9]/60 hover:text-[#FF3366] transition-colors"
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -155,13 +155,13 @@ export default function EternalFooter() {
         </div>
       </div>
 
-      <div className="border-t border-[#2D1318]">
+      <div className="border-t border-border">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-[#FFF8F9]/60 opacity-70">
+            <p className="text-sm text-text-secondary opacity-70">
               © {currentYear} Eternal Gift. Todos os direitos reservados.
             </p>
-            <span className="text-sm text-[#FFF8F9]/60 opacity-70">
+            <span className="text-sm text-text-secondary opacity-70">
               Made with 💜 in Brazil
             </span>
           </div>

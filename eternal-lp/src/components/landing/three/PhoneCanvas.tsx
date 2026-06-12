@@ -290,21 +290,21 @@ export default function PhoneCanvas() {
   const scrollProgress = useRef(0);
 
   useEffect(() => {
-    // 1. ScrollTrigger for entry/approach (Top to `#problema`'s top)
+    // 1. ScrollTrigger for entry/approach (Top of page to end of Hero cloud dive)
     const triggerPre = ScrollTrigger.create({
-      trigger: "#landing-wrapper",
+      trigger: "#hero",
       start: "top top",
-      end: "#problema top",
+      end: "+=1800",
       scrub: true,
       onUpdate: (self) => {
         preWindowProgress.current = self.progress;
       },
     });
 
-    // 2. ScrollTrigger for the pinned `#problema` section (Window Dive)
+    // 2. ScrollTrigger for the pinned text section (Window Dive)
     const triggerDive = ScrollTrigger.create({
-      trigger: "#problema",
-      start: "top top",
+      trigger: "#hero",
+      start: "top+=1800 top",
       end: "+=1200",
       scrub: true,
       onUpdate: (self) => {
