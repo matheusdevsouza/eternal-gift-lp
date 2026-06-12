@@ -21,7 +21,22 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       // 1. Staggered reveal of the logo scale and opacity
       gsap.fromTo(logoRef.current,
         { scale: 0.85, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" }
+        { 
+          scale: 1, 
+          opacity: 1, 
+          duration: 1.0, 
+          ease: "power3.out",
+          onComplete: () => {
+            // Heartbeat pulsing loop starts only after initial reveal finishes
+            gsap.to(logoRef.current, {
+              scale: 1.05,
+              duration: 0.8,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut"
+            });
+          }
+        }
       );
 
       // 2. Ticks from 00% to 100%
@@ -36,6 +51,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           }
         },
         onComplete: () => {
+          // Kill the infinite heartbeat loop on the logo before starting the exit animation
+          gsap.killTweensOf(logoRef.current);
+
           // Awwwards premium transition: slide up curtain panel
           const tl = gsap.timeline({
             onComplete: () => {
@@ -59,16 +77,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             ease: "power4.inOut",
           }, "-=0.35");
         },
-      });
-
-      // Subtle heartbeat pulsing loop for the logo
-      gsap.to(logoRef.current, {
-        scale: 1.05,
-        duration: 0.8,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.5
       });
     }, containerRef);
 

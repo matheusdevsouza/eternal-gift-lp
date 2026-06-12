@@ -117,11 +117,47 @@ export default function HeroSection() {
     () => {
       if (!sectionRef.current) return;
 
+      // 1. Calculate radial vectors and distances for each character
+      const letters = gsap.utils.toArray(".problem-letter");
+      const textContainer = sectionRef.current.querySelector(".problem-overlay .max-w-4xl");
+      
+      let centerX = window.innerWidth / 2;
+      let centerY = window.innerHeight / 2;
+
+      if (textContainer) {
+        const containerRect = textContainer.getBoundingClientRect();
+        centerX = containerRect.left + containerRect.width / 2;
+        centerY = containerRect.top + containerRect.height / 2;
+      }
+
+      const lettersData = letters.map((el) => {
+        const rect = el.getBoundingClientRect();
+        const elX = rect.left + rect.width / 2;
+        const elY = rect.top + rect.height / 2;
+        
+        let dx = elX - centerX;
+        let dy = elY - centerY;
+        
+        if (dx === 0 && dy === 0) {
+          dx = Math.random() - 0.5;
+          dy = Math.random() - 0.5;
+        }
+        
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const ux = dx / distance;
+        const uy = dy / distance;
+        
+        return { el, distance, ux, uy };
+      });
+
+      const maxDistance = Math.max(...lettersData.map(d => d.distance), 1);
+
+      // 2. Main Timeline Setup
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=3000", // Pinned scroll distance extended for seamless text transition
+          end: "+=4500", // Pinned scroll distance extended for seamless text transition
           pin: true,
           scrub: 1, // Smooth scrolling lag
           invalidateOnRefresh: true,
@@ -220,13 +256,58 @@ export default function HeroSection() {
         1.2
       );
 
-      // 10. Fade out and slide up the problem overlay to transition to ComoFuncionaSection
+      // 10. Dive Portal: zoom in the background representing the third section from the center
+      tl.fromTo(".dive-portal-overlay",
+        {
+          clipPath: "circle(0% at 50% 50%)",
+          opacity: 0
+        },
+        {
+          clipPath: "circle(150% at 50% 50%)",
+          opacity: 1,
+          ease: "power2.inOut",
+          duration: 1.0
+        },
+        3.5
+      );
+
+      tl.fromTo(".dive-portal-img",
+        { scale: 0.5 },
+        { scale: 1.0, ease: "power2.inOut", duration: 1.0 },
+        3.5
+      );
+
+      // Enable overflow visible on word containers so letters can fly off-screen without getting clipped
+      tl.set(".problem-word-container", { overflow: "visible" }, 3.5);
+
+      // 11. Disassemble the problem text: radial fly out from the center
+      lettersData.forEach((data) => {
+        const delay = (data.distance / maxDistance) * 0.35; // closer to center moves first (small delay)
+        const flyDistance = 1150 + Math.random() * 300;
+        
+        tl.to(data.el, {
+          x: data.ux * flyDistance,
+          y: data.uy * flyDistance,
+          opacity: 0,
+          scale: 0.5,
+          ease: "power2.in",
+          duration: 0.8
+        }, 3.6 + delay);
+      });
+
+      // 12. Fade out problem section floating assets and overlay pointer events
+      tl.to(".problem-floating-asset", {
+        opacity: 0,
+        scale: 0.8,
+        ease: "power2.in",
+        duration: 0.5
+      }, 3.5);
+
       tl.to(".problem-overlay", {
         opacity: 0,
-        y: -80,
-        ease: "power2.in",
-        duration: 0.3
-      }, 2.6);
+        pointerEvents: "none",
+        duration: 0.2
+      }, 4.4);
 
       // Organic, slow drifting loops for clouds (using separate inner elements to avoid conflicts)
       gsap.to(".float-mid-clouds", {
@@ -465,6 +546,35 @@ export default function HeroSection() {
         </div>
       </div>
 
+      {/* Dive Portal Overlay (representing ComoFuncionaSection background) */}
+      <div
+        className="dive-portal-overlay absolute inset-0 z-[5.5] pointer-events-none select-none overflow-hidden opacity-0"
+        style={{
+          backgroundColor: "#D28D96",
+          clipPath: "circle(0% at 50% 50%)",
+          WebkitClipPath: "circle(0% at 50% 50%)",
+        }}
+      >
+        <img
+          src="/background/nuvens/transicao-nuvens.png"
+          alt=""
+          className="dive-portal-img w-full h-full object-cover object-top opacity-[0.22]"
+        />
+        {/* Top and Bottom Gradients matching ComoFuncionaSection */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[180px] pointer-events-none z-[6]"
+          style={{
+            background: "linear-gradient(to bottom, #D28D96, transparent)"
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[250px] pointer-events-none z-[6]"
+          style={{
+            background: "linear-gradient(to top, #FFF8F9, transparent)"
+          }}
+        />
+      </div>
+
       {/* Problem Section content integrated directly for a seamless transition */}
       <div
         className="problem-overlay absolute inset-0 z-[6] pointer-events-none flex items-center justify-center opacity-0"
@@ -501,7 +611,7 @@ export default function HeroSection() {
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.3] text-center max-w-4xl mx-auto flex flex-wrap justify-center gap-x-[8px] gap-y-[4px]"
           >
             {wordsList.map((word, wordIdx) => (
-              <span key={wordIdx} className="inline-block whitespace-nowrap overflow-hidden py-1">
+              <span key={wordIdx} className="problem-word-container inline-block whitespace-nowrap overflow-hidden py-1">
                 {word.split("").map((char, charIdx) => (
                   <span
                     key={charIdx}
