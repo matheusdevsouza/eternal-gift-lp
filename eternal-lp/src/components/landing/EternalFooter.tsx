@@ -162,7 +162,7 @@ export default function EternalFooter() {
               © {currentYear} Eternal Gift. Todos os direitos reservados.
             </p>
             <span className="text-sm text-text-secondary opacity-70">
-              <a href="#" className="hover:text-primary transition-colors">Eternal Group</a>
+              Desenvolvido por <a href="#" className="hover:text-primary transition-colors">Eternal Group</a>
             </span>
           </div>
         </div>

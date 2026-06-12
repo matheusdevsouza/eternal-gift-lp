@@ -43,7 +43,7 @@ export default function FAQSection() {
   return (
     <section
       id="faq"
-      className="relative py-24 bg-transparent border-t border-border/50"
+      className="relative py-24 bg-transparent"
     >
       <div className="glow-bg w-[400px] h-[400px] bottom-0 right-0 opacity-5" />
 

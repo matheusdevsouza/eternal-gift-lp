@@ -13,7 +13,7 @@ interface Testimonial {
 
 const renderRow = (direction: "left" | "right", isEven: boolean) => {
   const baseWords = ["DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS"];
-  
+
   const renderInner = () => (
     <div style={{ display: "flex", gap: "3.2rem", paddingRight: "3.2rem" }}>
       {baseWords.map((word, wIdx) => {
@@ -41,7 +41,7 @@ const renderRow = (direction: "left" | "right", isEven: boolean) => {
 
   return (
     <div style={{ display: "flex", overflow: "hidden", width: "100%" }}>
-      <div 
+      <div
         className={`testimonials-bg-marquee-track testimonials-bg-marquee-track--${direction}`}
         style={{
           display: "flex",
@@ -193,7 +193,7 @@ export default function TestimonialsSection() {
     <section
       ref={sectionRef}
       id="depoimentos"
-      className="relative overflow-hidden py-24 border-y border-border flex flex-col gap-12"
+      className="relative overflow-hidden py-24 flex flex-col gap-12"
     >
       <style>{`
         @keyframes testimonials-scroll-left {
@@ -240,7 +240,7 @@ export default function TestimonialsSection() {
       {/* Centered Heading */}
       <div className="text-center max-w-3xl mx-auto px-6 z-20">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">
-          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">conexões</span> eternizadas.
+          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">conexões eternizadas.</span>
         </h2>
         <p className="mt-4 text-text-secondary text-base md:text-lg">
           Veja o que dizem as pessoas que já receberam e enviaram homenagens através da Eternal Gift.

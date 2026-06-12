@@ -31,7 +31,7 @@ export default function FinalCTASection() {
     <section
       id="final-cta"
       ref={containerRef}
-      className="relative min-h-screen flex flex-col items-center justify-center py-24 bg-transparent text-center overflow-hidden border-t border-border/50"
+      className="relative min-h-screen flex flex-col items-center justify-center py-24 bg-transparent text-center overflow-hidden"
     >
       {/* Background elements */}
       <div className="absolute inset-0 z-0 pointer-events-none">

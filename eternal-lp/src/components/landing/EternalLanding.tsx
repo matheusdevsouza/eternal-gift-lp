@@ -10,8 +10,7 @@ import Image from "next/image";
 import EternalHeader from "./EternalHeader";
 import EternalFooter from "./EternalFooter";
 
-import HeroSection from "./sections/HeroSection";
-import ComoFuncionaSection from "./sections/ComoFuncionaSection";
+import HeroScrollJourney from "./sections/HeroScrollJourney";
 import FeaturesSection from "./sections/FeaturesSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
 import PricingSection from "./sections/PricingSection";
@@ -86,8 +85,7 @@ export default function EternalLanding() {
 
       {/* 3. Sections Path */}
       <div className="relative z-20">
-        <HeroSection />
-        <ComoFuncionaSection />
+        <HeroScrollJourney />
         <FeaturesSection />
         <TestimonialsSection />
         <PricingSection />

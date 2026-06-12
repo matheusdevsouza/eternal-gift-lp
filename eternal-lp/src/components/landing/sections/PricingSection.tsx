@@ -42,7 +42,7 @@ export default function PricingSection() {
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto mb-16 pricing-fade">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight">
-            Escolha como <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">eternizar</span> suas memórias.
+            Escolha como <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">eternizar suas memórias.</span>
           </h2>
           <p className="mt-4 text-text-secondary text-base md:text-lg">
             Sem mensalidades recorrentes. Pagamento único com acesso completo.

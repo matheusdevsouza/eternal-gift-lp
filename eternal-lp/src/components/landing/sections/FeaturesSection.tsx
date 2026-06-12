@@ -12,7 +12,7 @@ export default function FeaturesSection() {
     <section
       id="features"
       ref={containerRef}
-      className="relative min-h-screen py-24 bg-transparent border-b border-border/50 overflow-hidden"
+      className="relative min-h-screen py-24 bg-bg-deep overflow-hidden"
     >
       <div className="glow-bg w-[600px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5" />
 
