@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import PhoneCanvas from "../three/PhoneCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -124,6 +125,12 @@ export default function HeroSection() {
           pin: true,
           scrub: 1, // Smooth scrolling lag
           invalidateOnRefresh: true,
+          onLeave: () => {
+            gsap.set(".phone-canvas-wrapper", { display: "none" });
+          },
+          onEnterBack: () => {
+            gsap.set(".phone-canvas-wrapper", { display: "flex" });
+          }
         },
       });
 
@@ -180,7 +187,7 @@ export default function HeroSection() {
 
       // 6. Cloud image within transition overlay fades in (very subtle, low opacity) together with the fog
       tl.to(".hero-transition-cloud-img", {
-        opacity: 0.08,
+        opacity: 0.22,
         ease: "power2.inOut",
         duration: 0.4
       }, 0.4);
@@ -192,15 +199,16 @@ export default function HeroSection() {
         duration: 0.2
       }, 1.0);
 
-      // 8. Word-by-word reveal of the text (coming up from below with clip-path mask)
-      tl.fromTo(".problem-word",
+      // 8. Character-by-character reveal of the text (coming up from below)
+      tl.fromTo(".problem-letter",
         { y: "110%", opacity: 0 },
         {
           y: "0%",
           opacity: 1,
-          stagger: 0.018, // 60 words * 0.018s = 1.08s total stagger
-          ease: "power1.out",
-          duration: 0.3
+          stagger: 0.005, // 280 characters * 0.005s = 1.4s total stagger
+          ease: "power2.out",
+          duration: 0.25,
+          clearProps: "transform" // Free GPU layer memory after animating
         },
         1.1
       );
@@ -379,18 +387,6 @@ export default function HeroSection() {
         xRange={-20}
       />
 
-      <FloatingElement
-        src="/background/balloon.webp"
-        className="hero-floating-asset absolute left-[5%] bottom-[5%] pointer-events-none select-none hidden 2xl:block z-[5]"
-        delay={6}
-        duration={25}
-        opacity={0.3}
-        size="w-16 md:w-24 lg:w-28"
-        blur="1.5px"
-        rotateRange={-15}
-        yRange={-35}
-      />
-
       {/* Main Content Container */}
       <div className="max-w-7xl mx-auto w-full relative z-[5] hero-content-to-fade">
         <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-8 lg:gap-16 items-center min-h-[80vh]">
@@ -456,12 +452,15 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Column 2: 3D Phone position reserved space (layer z-5) */}
+          {/* Column 2: Local 3D Phone Canvas (layer z-5) */}
           <div
-            className="relative order-2 flex items-center justify-center lg:h-[100vh] pointer-events-none z-[5]"
+            className="relative order-2 flex items-center justify-center lg:h-[100vh] w-full z-[5]"
             style={{ minHeight: "600px" }}
           >
-            <div className="glow-bg w-[300px] h-[300px] opacity-15" />
+            <div className="glow-bg w-[300px] h-[300px] opacity-15 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+            <div className="w-full h-full max-w-[450px] aspect-square lg:aspect-auto lg:h-[700px] relative pointer-events-none">
+              <PhoneCanvas />
+            </div>
           </div>
         </div>
       </div>
@@ -471,23 +470,10 @@ export default function HeroSection() {
         className="problem-overlay absolute inset-0 z-[6] pointer-events-none flex items-center justify-center opacity-0"
         style={{ backgroundColor: "transparent" }}
       >
-        {/* Background Pattern (Dark Grid) */}
-        <div
-          className="absolute inset-0 z-[1] pointer-events-none select-none"
-          style={{ opacity: 0.06, mixBlendMode: "multiply" }}
-        >
-          <img
-            src="/background/pattern.webp"
-            alt=""
-            className="w-full h-full object-cover"
-            style={{ filter: "invert(1)" }}
-          />
-        </div>
-
         {/* Floating Background Assets */}
         <div className="problem-floating-asset absolute left-6 lg:left-16 top-[20%] w-24 md:w-36 lg:w-48 select-none pointer-events-none z-10 hidden md:block">
           <img
-            src="/background/heart-balloon.webp"
+            src="/background/gift.webp"
             alt=""
             className="w-full h-auto object-contain float-left-asset"
           />
@@ -495,33 +481,43 @@ export default function HeroSection() {
 
         <div className="problem-floating-asset absolute right-6 lg:right-16 bottom-[20%] w-20 md:w-28 lg:w-36 select-none pointer-events-none z-10 hidden md:block">
           <img
-            src="/background/song.webp"
+            src="/background/balloon.webp"
             alt=""
             className="w-full h-auto object-contain float-right-asset"
+          />
+        </div>
+
+        <div className="problem-floating-asset absolute left-[12%] bottom-[15%] w-20 md:w-28 lg:w-36 select-none pointer-events-none z-10 hidden md:block">
+          <img
+            src="/background/gift.webp"
+            alt=""
+            className="w-full h-auto object-contain float-left-asset"
           />
         </div>
 
         <div className="max-w-5xl mx-auto px-6 relative z-20 text-center">
           {/* Editorial Text */}
           <div
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-[1.3] text-center max-w-4xl mx-auto flex flex-wrap justify-center gap-x-[12px] gap-y-[6px]"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.3] text-center max-w-4xl mx-auto flex flex-wrap justify-center gap-x-[8px] gap-y-[4px]"
           >
-            {wordsList.map((word, idx) => {
-              const isGradient = idx >= wordsList.length - 5;
-              return (
-                <span key={idx} className="inline-block overflow-hidden py-1">
+            {wordsList.map((word, wordIdx) => (
+              <span key={wordIdx} className="inline-block whitespace-nowrap overflow-hidden py-1">
+                {word.split("").map((char, charIdx) => (
                   <span
-                    className={`problem-word inline-block transition-all duration-300 ${
-                      isGradient
-                        ? "text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8F9] to-[#FDA4AF] font-black"
-                        : ""
-                    }`}
+                    key={charIdx}
+                    className="problem-letter inline-block bg-gradient-to-b from-white via-[#FFF8F9] to-[#FDA4AF] bg-clip-text text-transparent"
                   >
-                    {word}
+                    {char}
                   </span>
-                </span>
-              );
-            })}
+                ))}
+                {/* Space after the word */}
+                {wordIdx < wordsList.length - 1 && (
+                  <span className="problem-letter inline-block bg-gradient-to-b from-white via-[#FFF8F9] to-[#FDA4AF] bg-clip-text text-transparent">
+                    &nbsp;
+                  </span>
+                )}
+              </span>
+            ))}
           </div>
         </div>
       </div>

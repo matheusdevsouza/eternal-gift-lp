@@ -49,14 +49,17 @@ export default function ComoFuncionaSection() {
     <section
       id="como-funciona"
       ref={containerRef}
-      className="relative py-24 overflow-hidden"
+      className="relative min-h-screen flex items-center py-24 overflow-hidden"
+      style={{
+        backgroundColor: "#D28D96",
+      }}
     >
       {/* Background Image of cloud transition */}
       <div className="absolute inset-0 z-[1] pointer-events-none select-none">
         <img
           src="/background/nuvens/transicao-nuvens.png"
           alt=""
-          className="w-full h-full object-cover object-top opacity-100"
+          className="w-full h-full object-cover object-top opacity-[0.22]"
         />
       </div>
 
@@ -65,6 +68,14 @@ export default function ComoFuncionaSection() {
         className="absolute top-0 left-0 right-0 h-[180px] pointer-events-none z-[2]"
         style={{
           background: "linear-gradient(to bottom, #D28D96, transparent)"
+        }}
+      />
+
+      {/* Gradient transition at the bottom (to blend with FeaturesSection) */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[250px] pointer-events-none z-[2]"
+        style={{
+          background: "linear-gradient(to top, #FFF8F9, transparent)"
         }}
       />
 

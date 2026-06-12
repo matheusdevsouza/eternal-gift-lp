@@ -22,7 +22,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="antialiased bg-[#FFF8F9] text-[#2D1318]" suppressHydrationWarning>
+      <body className="antialiased bg-[#D28D96] text-[#2D1318]" suppressHydrationWarning>
         {children}
       </body>
     </html>

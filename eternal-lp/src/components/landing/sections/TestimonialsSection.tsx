@@ -11,6 +11,50 @@ interface Testimonial {
   date: string;
 }
 
+const renderRow = (direction: "left" | "right", isEven: boolean) => {
+  const baseWords = ["DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS", "DEPOIMENTOS"];
+  
+  const renderInner = () => (
+    <div style={{ display: "flex", gap: "3.2rem", paddingRight: "3.2rem" }}>
+      {baseWords.map((word, wIdx) => {
+        const isOutline = isEven ? wIdx % 2 === 0 : wIdx % 2 !== 0;
+        return (
+          <span
+            key={wIdx}
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "clamp(5.5rem, 9.5vw, 11rem)",
+              fontWeight: 900,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: isOutline ? "transparent" : "rgba(255, 51, 102, 0.015)",
+              WebkitTextStroke: isOutline ? "0.8px rgba(255, 51, 102, 0.012)" : "none",
+              userSelect: "none",
+            }}
+          >
+            {word}
+          </span>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div style={{ display: "flex", overflow: "hidden", width: "100%" }}>
+      <div 
+        className={`testimonials-bg-marquee-track testimonials-bg-marquee-track--${direction}`}
+        style={{
+          display: "flex",
+          width: "max-content",
+        }}
+      >
+        {renderInner()}
+        {renderInner()}
+      </div>
+    </div>
+  );
+};
+
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <div
@@ -151,6 +195,48 @@ export default function TestimonialsSection() {
       id="depoimentos"
       className="relative overflow-hidden py-24 border-y border-border flex flex-col gap-12"
     >
+      <style>{`
+        @keyframes testimonials-scroll-left {
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+        @keyframes testimonials-scroll-right {
+          0% { transform: translate3d(-50%, 0, 0); }
+          100% { transform: translate3d(0, 0, 0); }
+        }
+        .testimonials-bg-marquee-track--left {
+          animation: testimonials-scroll-left 45s linear infinite;
+        }
+        .testimonials-bg-marquee-track--right {
+          animation: testimonials-scroll-right 45s linear infinite;
+        }
+      `}</style>
+
+      {/* Background Slanted Marquees */}
+      <div
+        className="testimonials-bg-marquee-container"
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: "1.2rem",
+          transform: "rotate(-7deg) scale(1.15)",
+          transformOrigin: "center center",
+          pointerEvents: "none",
+          overflow: "hidden",
+        }}
+      >
+        {renderRow("left", true)}
+        {renderRow("right", false)}
+        {renderRow("left", true)}
+        {renderRow("right", false)}
+        {renderRow("left", true)}
+        {renderRow("right", false)}
+      </div>
+
       {/* Centered Heading */}
       <div className="text-center max-w-3xl mx-auto px-6 z-20">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">

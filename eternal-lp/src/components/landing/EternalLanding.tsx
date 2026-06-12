@@ -9,7 +9,6 @@ import Image from "next/image";
 
 import EternalHeader from "./EternalHeader";
 import EternalFooter from "./EternalFooter";
-import PhoneCanvas from "./three/PhoneCanvas";
 
 import HeroSection from "./sections/HeroSection";
 import ComoFuncionaSection from "./sections/ComoFuncionaSection";
@@ -24,6 +23,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function EternalLanding() {
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loading) {
+      document.body.style.backgroundColor = "#FFF8F9";
+    }
+  }, [loading]);
+
   useEffect(() => {
     // 1. Initialize Lenis Smooth Scroll
     const lenis = new Lenis({
@@ -74,9 +80,6 @@ export default function EternalLanding() {
           priority
         />
       </div>
-
-      {/* 1. Global Fixed R3F Phone Canvas */}
-      <PhoneCanvas />
 
       {/* 2. Global Header */}
       <EternalHeader />

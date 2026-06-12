@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Bebas+Neue&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  background-color: #FFF8F9;
+  background-color: #D28D96; /* Matches LoadingScreen to prevent flash on reload */
   color: #2D1318;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;

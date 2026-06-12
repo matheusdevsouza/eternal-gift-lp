@@ -162,7 +162,7 @@ export default function EternalFooter() {
               © {currentYear} Eternal Gift. Todos os direitos reservados.
             </p>
             <span className="text-sm text-text-secondary opacity-70">
-              Made with 💜 in Brazil
+              <a link>Eternal Group</a>
             </span>
           </div>
         </div>
