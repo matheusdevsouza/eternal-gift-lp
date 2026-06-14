@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 // @ts-ignore
 import Lenis from "lenis";
 import gsap from "gsap";
@@ -10,7 +10,9 @@ import Image from "next/image";
 import EternalHeader from "./EternalHeader";
 import EternalFooter from "./EternalFooter";
 
+import { ThemeContext } from "./themeContext";
 import HeroScrollJourney from "./sections/HeroScrollJourney";
+import PhoneCanvas from "./three/PhoneCanvas";
 import FeaturesSection from "./sections/FeaturesSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
 import PricingSection from "./sections/PricingSection";
@@ -20,12 +22,55 @@ import LoadingScreen from "./LoadingScreen";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type Theme = "light" | "dark";
+
 export default function EternalLanding() {
   const [loading, setLoading] = useState(true);
 
+  // Theme (light = day sky, dark = night sky). Initialized from localStorage
+  // synchronously (this component is client-only via dynamic ssr:false).
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "light";
+    return localStorage.getItem("eternal-theme") === "dark" ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("eternal-theme", theme);
+    } catch {}
+  }, [theme]);
+
+  const toggleTheme = useCallback(
+    () => setTheme((t) => (t === "dark" ? "light" : "dark")),
+    []
+  );
+
+  // Stable reference so the LoadingScreen's GSAP timeline is built only once.
+  const handleLoadingComplete = useCallback(() => setLoading(false), []);
+
+  // Initial hero pose: a prominent 3/4 product shot anchored to the RIGHT column.
+  // The hero scroll journey then drifts it across the screen (right -> center ->
+  // left) as the user scrolls — the awwwards-style scroll-reactive 3D motion.
+  const phonePose = useRef({
+    x: 1.3,
+    y: 0,
+    z: 0.15,
+    rx: 0.1,
+    ry: -0.45,
+    rz: 0.0,
+    scale: 1.12,
+  });
+
+
   useEffect(() => {
     if (!loading) {
-      document.body.style.backgroundColor = "#FFF8F9";
+      // Theme-aware page backdrop (resolves the CSS var live, so it follows the theme).
+      document.body.style.backgroundColor = "rgb(var(--c-bg-deep))";
+      // Refresh ScrollTrigger after DOM updates and loading screen unmounts
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
     }
   }, [loading]);
 
@@ -66,6 +111,7 @@ export default function EternalLanding() {
   }, []);
 
   return (
+    <ThemeContext.Provider value={theme}>
     <div id="landing-wrapper" className="relative w-full min-h-screen bg-bg-deep">
       {/* 0. Subtle Background Pattern */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -81,11 +127,12 @@ export default function EternalLanding() {
       </div>
 
       {/* 2. Global Header */}
-      <EternalHeader />
+      <EternalHeader theme={theme} onToggleTheme={toggleTheme} />
+
 
       {/* 3. Sections Path */}
       <div className="relative z-20">
-        <HeroScrollJourney />
+        <HeroScrollJourney phonePose={phonePose} theme={theme} />
         <FeaturesSection />
         <TestimonialsSection />
         <PricingSection />
@@ -96,8 +143,12 @@ export default function EternalLanding() {
       {/* 4. Global Footer */}
       <EternalFooter />
 
+      {/* Global Pinned Phone Canvas - Rendered at root to bypass container transform glitches */}
+      <PhoneCanvas poseRef={phonePose} />
+
       {/* Premium Loading Screen */}
-      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      {loading && <LoadingScreen onComplete={handleLoadingComplete} />}
     </div>
+    </ThemeContext.Provider>
   );
 }

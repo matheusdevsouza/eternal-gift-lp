@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
+import { useTheme, themedAsset } from "../themeContext";
 
 export default function FinalCTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
 
   useGSAP(
     () => {
@@ -53,7 +55,7 @@ export default function FinalCTASection() {
               }}
             >
               <Image
-                src="/background/heart.webp"
+                src={themedAsset("/background/heart.webp", theme)}
                 alt="Heart"
                 width={32}
                 height={32}
@@ -67,7 +69,7 @@ export default function FinalCTASection() {
       <div className="max-w-4xl mx-auto px-6 relative z-20 flex flex-col items-center">
         {/* Emotional Headline */}
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-text-primary leading-none mb-6 max-w-2xl">
-          Pronto para <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">emocionar</span> quem você ama?
+          Pronto para <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dark">emocionar</span> quem você ama?
         </h2>
 
         <p className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-xl mb-12">
@@ -79,9 +81,9 @@ export default function FinalCTASection() {
         <div className="flex flex-col items-center gap-6">
           <a
             href="#pricing"
-            className="px-10 py-5 bg-gradient-to-r from-[#FF3366] to-[#E91E63] hover:opacity-90 text-white font-black rounded-xl transition-all shadow-xl shadow-[#FF3366]/20 hover:scale-105 active:scale-95 text-center min-w-[200px] flex items-center justify-center gap-3 group"
+            className="px-10 py-5 bg-gradient-to-r from-primary to-primary-dark hover:opacity-90 text-white font-black rounded-xl transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 text-center min-w-[200px] flex items-center justify-center gap-3 group"
           >
-            Criar Homenagem
+            Criar homenagem
             <svg
               className="w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"
               fill="none"

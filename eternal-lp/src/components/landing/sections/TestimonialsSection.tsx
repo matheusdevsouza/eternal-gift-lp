@@ -9,6 +9,7 @@ interface Testimonial {
   relation: string;
   story: string;
   date: string;
+  image: string;
 }
 
 const renderRow = (direction: "left" | "right", isEven: boolean) => {
@@ -27,8 +28,8 @@ const renderRow = (direction: "left" | "right", isEven: boolean) => {
               fontWeight: 900,
               letterSpacing: "0.04em",
               textTransform: "uppercase",
-              color: isOutline ? "transparent" : "rgba(255, 51, 102, 0.015)",
-              WebkitTextStroke: isOutline ? "0.8px rgba(255, 51, 102, 0.012)" : "none",
+              color: isOutline ? "transparent" : "rgb(var(--c-primary) / 0.015)",
+              WebkitTextStroke: isOutline ? "0.8px rgb(var(--c-primary) / 0.012)" : "none",
               userSelect: "none",
             }}
           >
@@ -58,28 +59,19 @@ const renderRow = (direction: "left" | "right", isEven: boolean) => {
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <div
-      className="w-[280px] sm:w-[320px] bg-white text-text-primary p-5 pb-8 rounded-sm shadow-xl flex flex-col justify-between transform rotate-[-1deg] odd:rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 select-none border border-border"
+      className="w-[280px] sm:w-[320px] bg-bg-card text-text-primary p-5 pb-8 rounded-sm shadow-xl flex flex-col justify-between transform rotate-[-1deg] odd:rotate-[1.5deg] hover:rotate-0 hover:scale-105 transition-all duration-300 select-none border border-border group"
       style={{ flexShrink: 0 }}
     >
       {/* Polaroid Photo Area */}
-      <div className="w-full aspect-square bg-bg-deep rounded-sm mb-5 relative overflow-hidden flex flex-col items-center justify-center p-4 border border-border">
-        {/* Couple profile mock */}
-        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#FF3366] to-[#E91E63] flex items-center justify-center text-white font-extrabold text-xl mb-3 shadow-md">
-          {t.name
-            .split("&")
-            .map((n) => n.trim()[0])
-            .join("")}
-        </div>
-        <span className="text-[10px] font-bold tracking-widest text-[#FF3366] uppercase mb-1">
-          {t.relation}
-        </span>
-        <span className="text-[9px] text-text-muted font-mono">
-          {t.date}
-        </span>
-
+      <div className="w-full aspect-square bg-bg-deep rounded-sm mb-5 relative overflow-hidden border border-border">
+        <img
+          src={t.image}
+          alt={t.name}
+          className="w-full h-full object-cover grayscale-[15%] contrast-[105%] group-hover:grayscale-0 transition-all duration-300"
+        />
         {/* Heart SVG badge overlay */}
-        <div className="absolute top-3 right-3 text-[#FF3366]">
-          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <div className="absolute top-3 right-3 text-primary bg-bg-card/80 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
+          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </div>
@@ -91,11 +83,16 @@ function TestimonialCard({ t }: { t: Testimonial }) {
       </p>
 
       {/* Polaroid Handwriting Footer */}
-      <div className="border-t border-border pt-4 flex justify-between items-center">
-        <span className="font-serif italic text-lg font-bold text-text-primary tracking-tight">
-          {t.name}
-        </span>
-        <div className="flex text-[#FF3366]">
+      <div className="border-t border-border pt-4 flex justify-between items-end">
+        <div className="flex flex-col">
+          <span className="font-serif italic text-lg font-bold text-text-primary tracking-tight leading-none mb-1">
+            {t.name}
+          </span>
+          <span className="text-[10px] text-text-primary/60 font-medium uppercase tracking-wider">
+            {t.relation} • {t.date}
+          </span>
+        </div>
+        <div className="flex text-primary pb-0.5">
           {[...Array(5)].map((_, i) => (
             <svg
               key={i}
@@ -123,6 +120,7 @@ export default function TestimonialsSection() {
       story:
         "Entreguei o QR Code em um cartão de madeira personalizado. Quando ela abriu e a música começou a tocar, ela chorou muito. Foi o presente mais especial que já dei.",
       date: "12/06/2025",
+      image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=400&auto=format&fit=crop",
     },
     {
       name: "Roberto & Sofia",
@@ -130,6 +128,7 @@ export default function TestimonialsSection() {
       story:
         "Meus filhos criaram essa página reunindo fotos de toda a nossa jornada familiar. Reviver 25 anos em um link dinâmico foi a surpresa mais linda que já recebemos.",
       date: "18/10/2025",
+      image: "https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?q=80&w=400&auto=format&fit=crop",
     },
     {
       name: "Luana & Camila",
@@ -137,6 +136,7 @@ export default function TestimonialsSection() {
       story:
         "Fiz para o aniversário de 30 anos dela com fotos da nossa infância. Ela disse que foi infinitamente melhor do que qualquer presente físico. Ficamos horas relembrando.",
       date: "04/02/2026",
+      image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=400&auto=format&fit=crop",
     },
     {
       name: "Carlos & Clara",
@@ -144,6 +144,7 @@ export default function TestimonialsSection() {
       story:
         "A facilidade de montar é impressionante. Colei o QR Code em uma caixa de bombons e a reação dela foi inesquecível. Eternal Gift realmente eterniza o afeto.",
       date: "12/06/2025",
+      image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=400&auto=format&fit=crop",
     },
     {
       name: "Helena",
@@ -151,6 +152,7 @@ export default function TestimonialsSection() {
       story:
         "Criei em 5 minutos no celular. Minha mãe compartilha o link com toda a família até hoje. É mais do que um presente, é um arquivo de carinho guardado na nuvem.",
       date: "10/05/2026",
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop",
     },
   ];
 
@@ -240,7 +242,7 @@ export default function TestimonialsSection() {
       {/* Centered Heading */}
       <div className="text-center max-w-3xl mx-auto px-6 z-20">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight leading-tight">
-          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">conexões eternizadas.</span>
+          Lágrimas de felicidade e <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dark">conexões eternizadas.</span>
         </h2>
         <p className="mt-4 text-text-secondary text-base md:text-lg">
           Veja o que dizem as pessoas que já receberam e enviaram homenagens através da Eternal Gift.
@@ -250,8 +252,8 @@ export default function TestimonialsSection() {
       {/* Horizontal Track Wrapper */}
       <div className="relative w-full overflow-hidden py-4 flex flex-col gap-8">
         {/* Left & Right transparent gradients (large, starting at absolute screen edges) */}
-        <div className="absolute inset-y-0 left-0 w-[240px] sm:w-[380px] testimonials-gradient-left z-30 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-[240px] sm:w-[380px] testimonials-gradient-right z-30 pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-[80px] sm:w-[380px] testimonials-gradient-left z-30 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-[80px] sm:w-[380px] testimonials-gradient-right z-30 pointer-events-none" />
 
         {/* Row 1: Slides to the right */}
         <div className="relative w-full overflow-hidden py-10">

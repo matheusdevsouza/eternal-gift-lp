@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 
 interface FAQItem {
   question: string;
@@ -51,7 +51,7 @@ export default function FAQSection() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight">
-            Perguntas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] to-[#E91E63]">Comuns</span>
+            Perguntas <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dark">frequentes</span>
           </h2>
           <p className="mt-4 text-text-secondary text-base md:text-lg">
             Tudo o que você precisa saber para criar uma surpresa inesquecível.
@@ -95,33 +95,40 @@ export default function FAQSection() {
           })}
         </div>
 
-        {/* Contact Container underneath, same width as FAQ */}
-        <div className="max-w-3xl mx-auto mt-16">
-          <div className="p-6 md:p-8 rounded-2xl border border-border hover:border-primary/40 bg-bg-card flex flex-col sm:flex-row items-center gap-6 relative group overflow-hidden transition-all duration-300 shadow-xl shadow-[#FF3366]/[0.02]">
-            <div className="glow-bg w-48 h-48 opacity-10 group-hover:opacity-15 transition-opacity duration-500" />
-            
-            <div className="relative w-28 h-28 flex-shrink-0">
-              <Image
-                src="/mascote/looking.png"
-                alt="Guia Eternal Gift"
-                fill
-                className="object-contain"
-              />
-            </div>
-            
-            <div className="flex-1 text-center sm:text-left z-10">
-              <h3 className="text-xl font-bold text-text-primary mb-2">
-                Ainda está com alguma dúvida?
-              </h3>
-              <p className="text-sm text-text-secondary leading-relaxed mb-4">
-                Nossa equipe de suporte está de prontidão para ajudar você a criar a melhor homenagem.
-              </p>
-              <a
-                href="mailto:contato@eternalgift.com.br"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF3366] to-[#E91E63] hover:opacity-90 text-white rounded-xl text-sm font-bold transition-all shadow-[0_4px_15px_rgba(255,51,102,0.25)] hover:scale-105 active:scale-95"
-              >
-                Falar com o Suporte
-              </a>
+        {/* Premium Support CTA — gradient-bordered card faithful to the brand */}
+        <div className="max-w-3xl mx-auto mt-20">
+          <div className="relative rounded-[2rem] p-[1.5px] bg-gradient-to-br from-primary/40 via-accent/25 to-transparent shadow-[0_30px_60px_-30px_rgb(var(--c-primary)/0.3)]">
+            <div className="relative rounded-[1.9rem] bg-gradient-to-br from-bg-card to-bg-section px-7 py-9 md:px-10 md:py-10 flex flex-col sm:flex-row items-center gap-7 md:gap-9 overflow-hidden group">
+              {/* Soft ambient glow */}
+              <div className="absolute -top-12 -right-10 w-60 h-60 rounded-full bg-primary/10 blur-[90px] pointer-events-none group-hover:bg-primary/15 transition-colors duration-500" />
+
+              {/* Mascot */}
+              <div className="relative w-32 h-32 md:w-36 md:h-36 flex-shrink-0">
+                <Image
+                  src="/mascote/looking.png"
+                  alt="Suporte Eternal Gift"
+                  fill
+                  className="object-contain drop-shadow-[0_14px_28px_rgba(210,141,150,0.32)]"
+                  sizes="144px"
+                />
+              </div>
+
+              <div className="flex-1 text-center sm:text-left relative z-10">
+                <h3 className="text-2xl md:text-[1.7rem] font-black text-text-primary mb-2.5 tracking-tight leading-tight">
+                  Ainda tem alguma dúvida?
+                </h3>
+                <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6 max-w-md mx-auto sm:mx-0">
+                  A gente adora ajudar. Fale com nossa equipe e crie, do começo ao fim,
+                  a homenagem perfeita para quem você ama.
+                </p>
+                <a
+                  href="mailto:contato@eternalgift.com.br"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl text-sm font-bold transition-all shadow-[0_12px_28px_-10px_rgb(var(--c-primary)/0.5)] hover:shadow-[0_16px_32px_-10px_rgb(var(--c-primary)/0.6)] hover:scale-105 active:scale-95 group/btn"
+                >
+                  Falar com o suporte
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

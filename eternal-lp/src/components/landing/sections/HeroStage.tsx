@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import PhoneCanvas from "../three/PhoneCanvas";
+import { useTheme, themedAsset } from "../themeContext";
 
 interface FloatingElementProps {
   src: string;
@@ -29,50 +29,29 @@ function FloatingElement({
   blur = "0px",
   size = "w-32",
 }: FloatingElementProps) {
-  const entranceVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 1.2,
-        delay: delay * 0.2,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
+  // IMPORTANT: the outer `.hero-floating-asset` wrapper is owned exclusively by GSAP
+  // (it fades/translates it during the pinned hero scroll). Framer-motion only ever
+  // touches the INNER element here, so the two animation systems never fight over the
+  // same `opacity`/`transform` — which is what made the assets flicker and vanish.
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={entranceVariants}
-      className={className}
-    >
+    <div className={className}>
       <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
         animate={{
+          opacity,
+          scale: 1,
           y: yRange !== 0 ? [0, -yRange, 0] : 0,
           x: xRange !== 0 ? [0, xRange, 0] : 0,
           rotate: rotateRange !== 0 ? [-rotateRange / 2, rotateRange / 2, -rotateRange / 2] : 0,
         }}
         transition={{
-          y: {
-            duration: duration,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-          x: {
-            duration: duration * 1.1,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-          rotate: {
-            duration: duration * 1.2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
+          opacity: { duration: 1.2, delay: delay * 0.2, ease: [0.22, 1, 0.36, 1] },
+          scale: { duration: 1.2, delay: delay * 0.2, ease: [0.22, 1, 0.36, 1] },
+          y: { duration, repeat: Infinity, ease: "easeInOut" },
+          x: { duration: duration * 1.1, repeat: Infinity, ease: "easeInOut" },
+          rotate: { duration: duration * 1.2, repeat: Infinity, ease: "easeInOut" },
         }}
-        style={{ opacity: opacity }}
+        className="relative"
       >
         <img
           src={src}
@@ -82,20 +61,21 @@ function FloatingElement({
         />
         <div
           className="absolute inset-0 rounded-full blur-[40px] z-[-1] opacity-20"
-          style={{ background: "#FF3366" }}
+          style={{ background: "rgb(var(--c-primary))" }}
         />
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function HeroStage() {
+  const theme = useTheme();
   return (
     <>
       {/* Floating Background Effects - Organic & Refined (Top layer z-5) */}
       <FloatingElement
-        src="/background/gift.webp"
-        className="hero-floating-asset absolute -left-10 md:-left-5 lg:left-4 top-[15%] pointer-events-none select-none hidden xl:block z-[5]"
+        src={themedAsset("/background/gift.webp", theme)}
+        className="hero-floating-asset absolute -left-10 md:-left-5 lg:left-4 top-[15%] pointer-events-none select-none hidden md:block z-[5]"
         delay={0}
         duration={18}
         opacity={0.5}
@@ -104,8 +84,8 @@ export default function HeroStage() {
       />
 
       <FloatingElement
-        src="/background/balloon.webp"
-        className="hero-floating-asset absolute -right-10 md:-right-5 lg:right-4 top-[10%] pointer-events-none select-none hidden 2xl:block z-[5]"
+        src={themedAsset("/background/balloon.webp", theme)}
+        className="hero-floating-asset absolute -right-10 md:-right-5 lg:right-4 top-[10%] pointer-events-none select-none hidden lg:block z-[5]"
         delay={2}
         duration={22}
         opacity={0.35}
@@ -116,8 +96,8 @@ export default function HeroStage() {
       />
 
       <FloatingElement
-        src="/background/gift.webp"
-        className="hero-floating-asset absolute right-[5%] bottom-[15%] pointer-events-none select-none hidden xl:block z-[5]"
+        src={themedAsset("/background/gift.webp", theme)}
+        className="hero-floating-asset absolute right-[5%] bottom-[15%] pointer-events-none select-none hidden md:block z-[5]"
         delay={4}
         duration={20}
         opacity={0.4}
@@ -144,10 +124,10 @@ export default function HeroStage() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] font-black mb-6 lg:mb-8 leading-[1.05] tracking-tighter text-text-primary max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto lg:mx-0 xl:-mr-10 relative z-20"
+                className="text-5xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] font-black mb-6 lg:mb-8 leading-[1.05] tracking-tighter text-white max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto lg:mx-0 xl:-mr-10 relative z-20"
               >
                 Eternize histórias
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF3366] via-[#FDA4AF] to-[#FF3366] bg-[length:200%_auto] animate-gradient block">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient block">
                   e emocione de verdade.
                 </span>
               </motion.h1>
@@ -157,7 +137,7 @@ export default function HeroStage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-                className="text-lg sm:text-xl text-text-secondary mx-auto lg:mx-0 font-light leading-relaxed mb-10 max-w-2xl"
+                className="text-lg sm:text-xl text-white/80 mx-auto lg:mx-0 font-light leading-relaxed mb-10 max-w-2xl"
               >
                 Esqueça os presentes comuns. Crie uma página interativa com fotos,
                 vídeos, textos e uma trilha sonora marcante. Em menos de 5 minutos,
@@ -176,7 +156,7 @@ export default function HeroStage() {
               >
                 <a
                   href="#pricing"
-                  className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-[#FF3366] to-[#E91E63] hover:opacity-90 text-white font-black rounded-xl transition-all shadow-xl shadow-[#FF3366]/20 hover:scale-105 active:scale-95 text-center min-w-[200px] flex items-center justify-center gap-3 group"
+                  className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-primary to-primary-dark hover:opacity-90 text-white font-black rounded-xl transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 text-center min-w-[200px] flex items-center justify-center gap-3 group"
                 >
                   Criar meu presente agora
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -192,14 +172,13 @@ export default function HeroStage() {
             </div>
           </motion.div>
 
-          {/* Column 2: Local 3D Phone Canvas (layer z-5) */}
+          {/* Column 2: Spacer for global Phone Canvas alignment */}
           <div
-            className="relative order-2 flex items-center justify-center lg:h-[100vh] w-full z-[5]"
-            style={{ minHeight: "600px" }}
+            className="relative order-2 flex items-center justify-center min-h-[340px] sm:min-h-[440px] lg:min-h-[600px] lg:h-[100vh] w-full z-[5]"
           >
-            <div className="glow-bg w-[300px] h-[300px] opacity-15 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+            <div className="glow-bg w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] opacity-15 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
             <div className="w-full h-full max-w-[450px] aspect-square lg:aspect-auto lg:h-[700px] relative pointer-events-none">
-              <PhoneCanvas />
+              {/* Spacer container where the fixed phone aligns visually */}
             </div>
           </div>
         </div>

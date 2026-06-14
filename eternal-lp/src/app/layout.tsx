@@ -21,8 +21,15 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Apply the saved theme before paint to avoid a flash of the wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('eternal-theme');if(t==='dark'){document.documentElement.dataset.theme='dark';}}catch(e){}",
+          }}
+        />
       </head>
-      <body className="antialiased bg-[#D28D96] text-[#2D1318]" suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         {children}
       </body>
     </html>

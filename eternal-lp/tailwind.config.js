@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ["selector", '[data-theme="dark"]'],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,19 +9,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "bg-deep": "#FFF8F9",
-        "bg-card": "#FFFFFF",
-        "bg-card-hover": "#FFF0F2",
-        "bg-section": "#FFF0F2",
-        primary: "#FF3366",
-        "primary-hover": "#FF4D7D",
-        "primary-dark": "#E91E63",
-        accent: "#FDA4AF",
-        "text-primary": "#2D1318",
-        "text-secondary": "rgba(45, 19, 24, 0.68)",
-        "text-muted": "rgba(45, 19, 24, 0.45)",
-        border: "#F2DCDD",
-        "border-hover": "rgba(255, 51, 102, 0.2)",
+        // Theme-aware tokens (driven by CSS variables; see globals.css :root / [data-theme="dark"])
+        "bg-deep": "rgb(var(--c-bg-deep) / <alpha-value>)",
+        "bg-card": "rgb(var(--c-bg-card) / <alpha-value>)",
+        "bg-card-hover": "rgb(var(--c-bg-card-hover) / <alpha-value>)",
+        "bg-section": "rgb(var(--c-bg-section) / <alpha-value>)",
+        primary: "rgb(var(--c-primary) / <alpha-value>)",
+        "primary-hover": "rgb(var(--c-primary-hover) / <alpha-value>)",
+        "primary-dark": "rgb(var(--c-primary-dark) / <alpha-value>)",
+        accent: "rgb(var(--c-accent) / <alpha-value>)",
+        "text-primary": "rgb(var(--c-text-primary) / <alpha-value>)",
+        "text-secondary": "rgb(var(--c-text-primary) / 0.68)",
+        "text-muted": "rgb(var(--c-text-primary) / 0.45)",
+        border: "var(--border)",
+        "border-hover": "rgb(var(--c-primary) / 0.2)",
+        sky: "var(--sky)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],

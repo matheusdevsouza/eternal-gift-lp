@@ -4,12 +4,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===================== Theme tokens (light = default) ===================== */
+:root {
+  /* channel triples consumed by Tailwind tokens as rgb(var(--x) / <alpha-value>) */
+  --c-bg-deep: 255 248 249;
+  --c-bg-card: 255 255 255;
+  --c-bg-card-hover: 255 240 242;
+  --c-bg-section: 255 240 242;
+  --c-text-primary: 45 19 24;
+
+  /* brand accent (day = romantic pink) */
+  --c-primary: 255 51 102; /* #FF3366 */
+  --c-primary-hover: 255 77 125; /* #FF4D7D */
+  --c-primary-dark: 233 30 99; /* #E91E63 */
+  --c-accent: 253 164 175; /* #FDA4AF */
+
+  /* plain colors for inline styles / SVG fills */
+  --border: #f2dcdd;
+  --sky: #d28d96;          /* hero "sky" + pink sections + loading screen */
+  --c-sky: 210 141 150;    /* #D28D96 as channels (for translucent wave layers) */
+}
+
+/* ===================== Dark "night sky" theme ===================== */
+[data-theme="dark"] {
+  --c-bg-deep: 12 10 24;
+  --c-bg-card: 24 20 42;
+  --c-bg-card-hover: 34 28 56;
+  --c-bg-section: 18 14 34;
+  --c-text-primary: 244 238 248;
+
+  /* brand accent (night = moonlit violet) */
+  --c-primary: 167 139 250; /* #A78BFA */
+  --c-primary-hover: 187 162 255; /* #BBA2FF */
+  --c-primary-dark: 124 92 224; /* #7C5CE0 */
+  --c-accent: 196 181 253; /* #C4B5FD */
+
+  --border: rgba(255, 255, 255, 0.1);
+  --sky: #120e26;          /* deep night sky */
+  --c-sky: 18 14 38;       /* #120E26 as channels */
+}
+
 body {
-  background-color: #D28D96; /* Matches LoadingScreen to prevent flash on reload */
-  color: #2D1318;
+  background-color: var(--sky); /* matches LoadingScreen to prevent flash on reload */
+  color: rgb(var(--c-text-primary));
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.5s ease;
 }
 
 /* Hide default scrollbar for smooth visual scroll feel, customizable if needed */
@@ -18,30 +59,38 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFF8F9;
+  background: rgb(var(--c-bg-deep));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E5C5C6;
+  background: rgb(var(--c-primary) / 0.45);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF3366;
+  background: rgb(var(--c-primary));
+}
+
+/* The decorative 3D phone canvases are purely visual — never let them (or the
+   r3f wrapper <div> that sits between the wrapper and the <canvas>) capture
+   pointer events or block text selection / card hovers on the content below. */
+.phone-canvas-wrapper,
+.phone-canvas-wrapper * {
+  pointer-events: none !important;
 }
 
 /* Custom styles for premium look */
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 51, 102, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(255, 51, 102, 0.04);
+  border: 1px solid rgb(var(--c-primary) / 0.12);
+  box-shadow: 0 8px 32px 0 rgb(var(--c-primary) / 0.04);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 51, 102, 0.3);
-  box-shadow: 0 12px 40px 0 rgba(255, 51, 102, 0.08);
+  border-color: rgb(var(--c-primary) / 0.3);
+  box-shadow: 0 12px 40px 0 rgb(var(--c-primary) / 0.08);
   transform: translateY(-4px);
 }
 
@@ -50,9 +99,13 @@ body {
   border-radius: 50%;
   filter: blur(120px);
   opacity: 0.08;
-  background: #FF3366;
+  background: rgb(var(--c-primary));
   pointer-events: none;
   z-index: 0;
+}
+[data-theme="dark"] .glow-bg {
+  /* a touch stronger so the moonlit glow reads on the dark sky */
+  opacity: 0.16;
 }
 
 /* Smooth scrolling via Lenis */
@@ -78,19 +131,57 @@ html.lenis, html.lenis body {
 
 /* Testimonials Smooth Side Gradients */
 .testimonials-gradient-left {
-  background: linear-gradient(to right, #FFF8F9 0px, #FFF8F9 40px, rgba(255, 248, 249, 0.9) 80px, rgba(255, 248, 249, 0.4) 160px, transparent 240px);
+  background: linear-gradient(to right, rgb(var(--c-bg-deep)) 0px, rgb(var(--c-bg-deep) / 0.85) 28px, rgb(var(--c-bg-deep) / 0.35) 56px, transparent 80px);
 }
 @media (min-width: 640px) {
   .testimonials-gradient-left {
-    background: linear-gradient(to right, #FFF8F9 0px, #FFF8F9 80px, rgba(255, 248, 249, 0.9) 140px, rgba(255, 248, 249, 0.4) 260px, transparent 380px);
+    background: linear-gradient(to right, rgb(var(--c-bg-deep)) 0px, rgb(var(--c-bg-deep)) 80px, rgb(var(--c-bg-deep) / 0.9) 140px, rgb(var(--c-bg-deep) / 0.4) 260px, transparent 380px);
   }
 }
 
 .testimonials-gradient-right {
-  background: linear-gradient(to left, #FFF8F9 0px, #FFF8F9 40px, rgba(255, 248, 249, 0.9) 80px, rgba(255, 248, 249, 0.4) 160px, transparent 240px);
+  background: linear-gradient(to left, rgb(var(--c-bg-deep)) 0px, rgb(var(--c-bg-deep) / 0.85) 28px, rgb(var(--c-bg-deep) / 0.35) 56px, transparent 80px);
 }
 @media (min-width: 640px) {
   .testimonials-gradient-right {
-    background: linear-gradient(to left, #FFF8F9 0px, #FFF8F9 80px, rgba(255, 248, 249, 0.9) 140px, rgba(255, 248, 249, 0.4) 260px, transparent 380px);
+    background: linear-gradient(to left, rgb(var(--c-bg-deep)) 0px, rgb(var(--c-bg-deep)) 80px, rgb(var(--c-bg-deep) / 0.9) 140px, rgb(var(--c-bg-deep) / 0.4) 260px, transparent 380px);
+  }
+}
+
+/* Animated gradient text/price (bg-[length:200%_auto] + animate-gradient) */
+@keyframes gradient-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.animate-gradient {
+  animation: gradient-pan 4s linear infinite;
+}
+
+/* Animated Wave Shape Divider (used in WaveDivider.tsx) */
+@keyframes eternal-wave-loop-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes eternal-wave-loop-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+@keyframes eternal-wave-bob-a {
+  0%   { transform: scaleY(0.78); }
+  100% { transform: scaleY(1.18); }
+}
+@keyframes eternal-wave-bob-b {
+  0%   { transform: scaleY(1.2); }
+  100% { transform: scaleY(0.82); }
+}
+@keyframes eternal-wave-bob-c {
+  0%   { transform: scaleY(0.85); }
+  100% { transform: scaleY(1.25); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eternal-wave-layer,
+  .eternal-wave-bob {
+    animation: none !important;
   }
 }

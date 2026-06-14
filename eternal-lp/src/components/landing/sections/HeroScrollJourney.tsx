@@ -12,11 +12,32 @@ import HowItWorksStage from "./HowItWorksStage";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function HeroScrollJourney() {
+interface HeroScrollJourneyProps {
+  phonePose: React.RefObject<{
+    x: number;
+    y: number;
+    z: number;
+    rx: number;
+    ry: number;
+    rz: number;
+    scale: number;
+  }>;
+  theme?: "light" | "dark";
+}
+
+export default function HeroScrollJourney({ phonePose, theme = "light" }: HeroScrollJourneyProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const midRef = useRef<HTMLDivElement>(null);
   const frontRef = useRef<HTMLDivElement>(null);
+
+  // Night-sky cloud variants when dark mode is active.
+  const isDark = theme === "dark";
+  const bgSrc = isDark ? "/background/darkmode/01_fundo_distante-dark.png" : "/background/01_fundo_distante.png";
+  const midSrc = isDark ? "/background/darkmode/02_fundo_meio-dark.png" : "/background/02_nuvens_meio.png";
+  const frontSrc = isDark ? "/background/darkmode/03_fundo_frente-dark.png" : "/background/03_nuvens_frente.png";
+  // Cloud-interior overlay used in the dive transition (dark variant exists).
+  const dentroSrc = isDark ? "/background/darkmode/dentro-nuvens.png" : "/background/nuvens/dentro-nuvens.png";
 
   const quote =
     "Flores morrem em dias. Perfumes evaporam. Roupas perdem a graça. Mas a memória de como você fez alguém se sentir... essa fica gravada para sempre. No final das contas, o que realmente importa não cabe em caixas ou embrulhos. Está na hora de parar de dar presentes sem alma e começar a eternizar o amor de verdade.";
@@ -29,7 +50,7 @@ export default function HeroScrollJourney() {
 
       // 1. Calculate radial vectors and distances for each character
       const letters = gsap.utils.toArray(".problem-letter");
-      const textContainer = sectionRef.current.querySelector(".problem-overlay .max-w-4xl");
+      const textContainer = sectionRef.current.querySelector(".problem-overlay .max-w-3xl");
       
       let centerX = window.innerWidth / 2;
       let centerY = window.innerHeight / 2;
@@ -56,8 +77,9 @@ export default function HeroScrollJourney() {
         const distance = Math.sqrt(dx * dx + dy * dy);
         const ux = dx / distance;
         const uy = dy / distance;
+        const flyDistance = 1150 + Math.random() * 300;
         
-        return { el, distance, ux, uy };
+        return { el, distance, ux, uy, flyDistance };
       });
 
       const maxDistance = Math.max(...lettersData.map(d => d.distance), 1);
@@ -72,10 +94,17 @@ export default function HeroScrollJourney() {
           scrub: 1, // Smooth scrolling lag
           invalidateOnRefresh: true,
           onLeave: () => {
-            gsap.set(".phone-canvas-wrapper", { display: "none" });
+            // Only the hero's fixed phone — never the in-card canvas (which shares
+            // the generic .phone-canvas-wrapper class). Guard so GSAP never warns
+            // about a missing target if the canvas hasn't mounted yet.
+            if (document.querySelector(".hero-phone-canvas")) {
+              gsap.set(".hero-phone-canvas", { display: "none" });
+            }
           },
           onEnterBack: () => {
-            gsap.set(".phone-canvas-wrapper", { display: "flex" });
+            if (document.querySelector(".hero-phone-canvas")) {
+              gsap.set(".hero-phone-canvas", { display: "block" });
+            }
           }
         },
       });
@@ -90,12 +119,36 @@ export default function HeroScrollJourney() {
         duration: 0.4
       }, 0);
 
-      // 1b. Floating assets fade out
-      tl.to(".hero-floating-asset", {
+      // 1b. Floating assets fade out (explicit fromTo so the resting state is always
+      //     fully visible at scroll progress 0 — framer-motion owns their inner opacity,
+      //     GSAP owns this wrapper opacity/translate, so there is no longer a conflict).
+      tl.fromTo(".hero-floating-asset",
+        { opacity: 1, y: 0 },
+        {
+          opacity: 0,
+          y: -50,
+          ease: "power2.inOut",
+          duration: 0.4
+        }, 0);
+
+      // 1c. Dark contrast overlay fades out
+      tl.to(".hero-dark-overlay", {
         opacity: 0,
-        y: -50,
         ease: "power2.inOut",
         duration: 0.4
+      }, 0);
+
+      // Animate 3D Phone to the center, slightly behind text
+      tl.to(phonePose.current, {
+        x: 0,
+        y: 0,
+        z: -0.65,
+        rx: 0.0,
+        ry: Math.PI * 2 - 0.22, // 1 complete spin
+        rz: 0.0,
+        scale: 0.88,
+        ease: "power2.inOut",
+        duration: 1.2
       }, 0);
 
       // 2. Sky background scales up and fades
@@ -192,20 +245,27 @@ export default function HeroScrollJourney() {
       // Enable overflow visible on word containers so letters can fly off-screen without getting clipped
       tl.set(".problem-word-container", { overflow: "visible" }, 3.5);
 
-      // 11. Disassemble the problem text: radial fly out from the center
-      lettersData.forEach((data) => {
-        const delay = (data.distance / maxDistance) * 0.35; // closer to center moves first (small delay)
-        const flyDistance = 1150 + Math.random() * 300;
-        
-        tl.to(data.el, {
-          x: data.ux * flyDistance,
-          y: data.uy * flyDistance,
-          opacity: 0,
-          scale: 0.5,
-          ease: "power2.in",
-          duration: 0.8
-        }, 3.6 + delay);
-      });
+      // Animate 3D Phone to the left side to balance cards in HowItWorksStage
+      tl.to(phonePose.current, {
+        x: -1.2, // Left side layout
+        y: 0,
+        z: 0.2,
+        rx: 0.12,
+        ry: Math.PI * 3.5, // organic spin during transition
+        rz: -0.05,
+        scale: 1.05,
+        ease: "power2.inOut",
+        duration: 1.0
+      }, 3.3);
+
+      // 11. Disassemble the problem text: fall down in a clean sequential wave (opposite of rising)
+      tl.to(".problem-letter", {
+        y: "110%",
+        opacity: 0,
+        stagger: 0.002, // elegant left-to-right cascade
+        ease: "power2.in",
+        duration: 0.45
+      }, 3.6);
 
       // 12. Fade out problem section floating assets
       tl.to(".problem-floating-asset", {
@@ -229,14 +289,18 @@ export default function HeroScrollJourney() {
         duration: 0.4
       }, 4.2);
 
-      // 14. Stagger reveal of the step cards in the third section
-      tl.to(".como-funciona-step-card", {
-        y: 0,
-        opacity: 1,
-        stagger: 0.12,
-        ease: "power2.out",
-        duration: 0.6
-      }, 4.3);
+      // 14. Stagger reveal of the step cards in the third section (explicit fromTo so
+      //     it renders reliably from a clean hidden state, with a soft lift + scale).
+      tl.fromTo(".como-funciona-step-card",
+        { y: 64, opacity: 0, scale: 0.95 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          stagger: 0.14,
+          ease: "power3.out",
+          duration: 0.75
+        }, 4.25);
 
       // Organic, slow drifting loops for clouds (using separate inner elements to avoid conflicts)
       gsap.to(".float-mid-clouds", {
@@ -287,13 +351,15 @@ export default function HeroScrollJourney() {
       ref={sectionRef}
       className="relative min-h-screen flex items-center px-4 sm:px-6 overflow-hidden pt-24 pb-12 z-[2]"
       style={{
-        backgroundColor: "#D28D96",
+        // Solid pink at the bottom so it connects seamlessly into the wave divider
+        // at the top of the Features section below.
+        background: "var(--sky)",
       }}
     >
       {/* Background Glow */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[200px] rounded-full blur-[100px] z-[5] opacity-40 pointer-events-none select-none"
-        style={{ background: "linear-gradient(to bottom, rgba(255, 51, 102, 0.15), transparent)" }}
+        style={{ background: "linear-gradient(to bottom, rgb(var(--c-primary) / 0.15), transparent)" }}
       />
 
       {/* Parallax Background Layers Wrapper with CSS Mask to fade to transparent at the bottom */}
@@ -310,7 +376,7 @@ export default function HeroScrollJourney() {
           className="absolute top-[-10%] left-0 w-full h-[130%] pointer-events-none select-none z-[1]"
         >
           <img
-            src="/background/01_fundo_distante.png"
+            src={bgSrc}
             alt=""
             className="w-full h-full object-cover"
           />
@@ -320,7 +386,7 @@ export default function HeroScrollJourney() {
         <div
           className="absolute inset-0 pointer-events-none select-none z-[2] hero-transition-overlay"
           style={{
-            backgroundColor: "#D28D96",
+            backgroundColor: "var(--sky)",
             opacity: 0,
           }}
         />
@@ -333,7 +399,7 @@ export default function HeroScrollJourney() {
           }}
         >
           <img
-            src="/background/nuvens/dentro-nuvens.png"
+            src={dentroSrc}
             alt=""
             className="w-full h-full object-cover"
           />
@@ -344,7 +410,7 @@ export default function HeroScrollJourney() {
           className="absolute bottom-[-100px] left-0 w-full h-full pointer-events-none select-none z-[4]"
         >
           <img
-            src="/background/02_nuvens_meio.png"
+            src={midSrc}
             alt=""
             className="w-full h-full object-cover float-mid-clouds scale-[1.15] origin-center"
           />
@@ -355,7 +421,7 @@ export default function HeroScrollJourney() {
           className="absolute bottom-[-150px] left-0 w-full h-full pointer-events-none select-none z-[5]"
         >
           <img
-            src="/background/03_nuvens_frente.png"
+            src={frontSrc}
             alt=""
             className="w-full h-full object-cover float-front-clouds scale-[1.15] origin-center"
           />
@@ -366,13 +432,15 @@ export default function HeroScrollJourney() {
       <div
         className="dive-portal-overlay absolute inset-0 z-[5.5] pointer-events-none select-none overflow-hidden opacity-0"
         style={{
-          backgroundColor: "#D28D96",
+          backgroundColor: "var(--sky)",
           clipPath: "circle(0% at 50% 50%)",
           WebkitClipPath: "circle(0% at 50% 50%)",
+          maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent 100%)",
         }}
       >
         <img
-          src="/background/nuvens/transicao-nuvens.png"
+          src={dentroSrc}
           alt=""
           className="dive-portal-img w-full h-full object-cover object-top opacity-[0.22]"
         />
@@ -380,17 +448,17 @@ export default function HeroScrollJourney() {
         <div
           className="absolute top-0 left-0 right-0 h-[180px] pointer-events-none z-[6]"
           style={{
-            background: "linear-gradient(to bottom, #D28D96, transparent)"
+            background: "linear-gradient(to bottom, var(--sky), transparent)"
           }}
         />
       </div>
 
-      {/* Bottom Gradient for seamless transition to FeaturesSection (always rendered, unclipped) */}
+      {/* Subtle Dark Vignette / Gradient Overlay for Text Readability */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-[250px] pointer-events-none z-[5.8]"
-        style={{
-          background: "linear-gradient(to top, #FFF8F9, transparent)"
-        }}
+        className="hero-dark-overlay absolute inset-0 z-[4] pointer-events-none bg-gradient-to-r from-black/40 via-black/15 to-transparent hidden lg:block"
+      />
+      <div
+        className="hero-dark-overlay absolute inset-0 z-[4] pointer-events-none bg-black/35 lg:hidden"
       />
 
       {/* Stage 1: Hero Stage */}
@@ -401,6 +469,14 @@ export default function HeroScrollJourney() {
 
       {/* Stage 3: How It Works Stage */}
       <HowItWorksStage />
+
+      {/* Bottom Gradient for seamless transition to FeaturesSection (always rendered, unclipped) */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[250px] pointer-events-none z-[5.8]"
+        style={{
+          background: "linear-gradient(to top, transparent 0%, var(--sky) 100%)"
+        }}
+      />
     </section>
   );
 }

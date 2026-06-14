@@ -51,7 +51,7 @@ export default function ComoFuncionaSection() {
       ref={containerRef}
       className="relative min-h-screen flex items-center py-24 overflow-hidden"
       style={{
-        backgroundColor: "#D28D96",
+        background: "linear-gradient(to bottom, #D28D96 75%, transparent 100%)",
       }}
     >
       {/* Background Image of cloud transition */}
@@ -71,11 +71,11 @@ export default function ComoFuncionaSection() {
         }}
       />
 
-      {/* Gradient transition at the bottom (to blend with FeaturesSection) */}
+      {/* Bottom Gradient for transition to next section (restored transparent pink gradient) */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[250px] pointer-events-none z-[2]"
         style={{
-          background: "linear-gradient(to top, #FFF8F9, transparent)"
+          background: "linear-gradient(to top, rgba(210, 141, 150, 0) 0%, #D28D96 100%)"
         }}
       />
 
